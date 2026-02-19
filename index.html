@@ -251,21 +251,25 @@ footer{background:var(--white);border-top:1px solid var(--border);margin-top:8px
     <div class="sec-label">Mon profil de plongée</div>
     <div class="sel-grid">
       <div class="field">
-        <label>🎓 Niveau du plongeur</label>
+        <label>🎓 Mon niveau</label>
         <select id="diver-level" onchange="onFilterChange()">
+          <option value="NB">NB — Non Breveté</option>
           <option value="1star">1* — Plongeur Encadré</option>
           <option value="2star" selected>2* — Plongeur Autonome</option>
           <option value="3star">3* — Plongeur Confirmé</option>
-          <option value="expert">4* / AM / MC / MF / MN</option>
+          <option value="4star">4* — Plongeur Expert</option>
+          <option value="AM">AM / MC / MF / MN — Moniteur</option>
         </select>
       </div>
       <div class="field">
-        <label>📏 Profondeur max souhaitée</label>
-        <select id="max-depth" onchange="onFilterChange()">
-          <option value="12">Jusqu'à 12m</option>
-          <option value="20" selected>Jusqu'à 20m</option>
-          <option value="30">Jusqu'à 30m</option>
-          <option value="99">40m et plus</option>
+        <label>🤿 Niveau du binôme</label>
+        <select id="buddy-level" onchange="onFilterChange()">
+          <option value="NB">NB — Non Breveté</option>
+          <option value="1star">1*</option>
+          <option value="2star">2*</option>
+          <option value="3star" selected>3*</option>
+          <option value="4star">4*</option>
+          <option value="AM">AM / MC / MF / MN</option>
         </select>
       </div>
     </div>
@@ -416,6 +420,14 @@ const RWS_MAP = {STAVNS:"STAVNS",BRKDMDN:"BRKDMDN",VLISSGN:"VLISSGN",TERNZN:"TER
 const SEA_TEMPS = [5,5,7,9,12,15,18,19,17,14,11,7];
 const MONTHS_FR = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
 const DIRS = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSO","SO","OSO","O","ONO","NO","NNO"];
+const DEPTH_RULES = {
+  NB:     { NB:null, '1star':null, '2star':null, '3star':null, '4star':null, AM:15   },
+  '1star':{ NB:null, '1star':null, '2star':null, '3star':20,   '4star':20,   AM:20   },
+  '2star':{ NB:null, '1star':null, '2star':20,   '3star':30,   '4star':40,   AM:40   },
+  '3star':{ NB:null, '1star':20,   '2star':30,   '3star':40,   '4star':40,   AM:40   },
+  '4star':{ NB:null, '1star':20,   '2star':40,   '3star':40,   '4star':40,   AM:60   },
+  AM:     { NB:15,   '1star':20,   '2star':40,   '3star':40,   '4star':40,   AM:60   }
+};
 const dir = d => DIRS[Math.round(d/22.5)%16];
 const p2 = n => String(Math.abs(n)).padStart(2,'0');
 const fmtT = d => `${p2(d.getHours())}:${p2(d.getMinutes())}`;
@@ -680,29 +692,40 @@ function spotLevel(spot){
 
 // ── Filter ──
 function renderFilter(spot){
-  const level=document.getElementById('diver-level').value;
-  const maxD=parseInt(document.getElementById('max-depth').value);
+  const myLevel=document.getElementById('diver-level').value;
+  const buddyLevel=document.getElementById('buddy-level').value;
   const el=document.getElementById('filter-result');
   if(!el) return;
-  const sLevel=spotLevel(spot);
-  const rank={'1star':0,'2star':1,'3star':2,expert:3,beginner:0,intermediate:1,experienced:2};
-  const diverRank=rank[level], siteRank=rank[sLevel];
-  const levelNames={beginner:'Débutant (1*)',intermediate:'Intermédiaire (2*+)',experienced:'Confirmé (3*+)','1star':'1*','2star':'2*','3star':'3*',expert:'4*+'};
+  const lbl={NB:'NB','1star':'1★','2star':'2★','3star':'3★','4star':'4★',AM:'AM/Moniteur'};
+  const authDepth=(DEPTH_RULES[myLevel]||{})[buddyLevel]??null;
   let html='';
-  // Compatibilité niveau
-  if(diverRank>=siteRank){
-    html+=`<div class="alert a-green">✅ <strong>${spot.fr}</strong> est adapté à votre niveau <strong>(${levelNames[sLevel]})</strong>.</div>`;
-  } else {
-    html+=`<div class="alert a-red">⚠️ <strong>${spot.fr}</strong> est classé <strong>${levelNames[sLevel]}</strong> — ce site dépasse votre niveau actuel.</div>`;
+  // Combinaison autorisée ?
+  if(authDepth===null){
+    html+=`<div class="alert a-red">🚫 <strong>Combinaison non autorisée (LIFRAS)</strong> — Un plongeur <strong>${lbl[myLevel]}</strong> ne peut pas plonger avec un binôme <strong>${lbl[buddyLevel]}</strong>.</div>`;
+    el.innerHTML=html;
+    return;
   }
-  // Profondeur
+  const depthLabel=authDepth>=60?'au-delà de 40m':`${authDepth}m max`;
+  html+=`<div class="alert a-green">✅ Combinaison autorisée — <strong>${lbl[myLevel]}</strong> + <strong>${lbl[buddyLevel]}</strong> : <strong>${depthLabel}</strong></div>`;
+  // Note spéciale 2★+2★
+  if(myLevel==='2star'&&buddyLevel==='2star'){
+    html+=`<div class="alert a-yellow">⚠️ 2★ + 2★ : uniquement à 20m max et si les deux plongeurs ont <strong>18 ans révolus</strong>.</div>`;
+  }
+  // Compatibilité profondeur du site
+  const maxD=authDepth>=60?999:authDepth;
   if(spot.depth>maxD){
-    html+=`<div class="alert a-yellow">📏 Ce site descend jusqu'à <strong>${spot.depth}m</strong> — dépasse votre profondeur souhaitée (${maxD}m). Limitez votre plongée en conséquence.</div>`;
+    html+=`<div class="alert a-red">📏 <strong>${spot.fr}</strong> descend à <strong>${spot.depth}m</strong> — dépasse la profondeur autorisée pour cette combinaison (${depthLabel}).</div>`;
+  } else {
+    html+=`<div class="alert a-green">📏 <strong>${spot.fr}</strong> (${spot.depth}m) est dans la limite autorisée (${depthLabel}).</div>`;
   }
-  // Nb de sites compatibles
-  const matching=Object.values(SPOTS).filter(s=>rank[spotLevel(s)]<=diverRank&&s.depth<=maxD);
+  // Alerte site expert
+  if(spot.expert){
+    html+=`<div class="alert a-red">⚠️ Site réservé aux plongeurs très expérimentés — courants violents / trafic maritime.</div>`;
+  }
+  // Nb de sites compatibles dans la limite de profondeur
+  const matching=Object.values(SPOTS).filter(s=>s.depth<=maxD&&!(s.expert&&['NB','1star','2star'].includes(myLevel)));
   const total=Object.keys(SPOTS).length;
-  html+=`<div style="font-size:.72rem;color:var(--muted);margin-top:6px">💡 <strong>${matching.length}</strong> sites sur ${total} correspondent à votre profil — modifiez les filtres pour explorer.</div>`;
+  html+=`<div style="font-size:.72rem;color:var(--muted);margin-top:6px">💡 <strong>${matching.length}</strong> sites sur ${total} accessibles pour cette combinaison.</div>`;
   el.innerHTML=html;
 }
 

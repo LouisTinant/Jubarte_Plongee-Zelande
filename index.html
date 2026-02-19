@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plongée Zélande</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f5f7;--white:#fff;--border:#e0e0e5;--text:#1d1d1f;--muted:#6e6e73;
+  --accent:#0071e3;--accent-light:#e8f1fb;--green:#28a745;--green-bg:#eaf7ec;
+  --yellow:#f5a623;--yellow-bg:#fef8ec;--red:#d70015;--red-bg:#ffeef0;
+  --blue-dark:#003d82;--radius:18px;--shadow:0 2px 20px rgba(0,0,0,.07);
+}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* Header */
+header{background:rgba(255,255,255,.88);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;padding:0 24px}
+.hdr{max-width:980px;margin:0 auto;display:flex;align-items:center;height:54px;gap:14px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{font-size:1.5rem}
+.logo-text{font-size:1rem;font-weight:700;color:var(--text);letter-spacing:-.02em}
+.logo-sub{font-size:.68rem;color:var(--muted)}
+.live-pill{margin-left:auto;display:flex;align-items:center;gap:6px;background:var(--green-bg);border:1px solid #b8e6c1;border-radius:20px;padding:4px 11px}
+.live-dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
+.live-txt{font-size:.68rem;font-weight:600;color:var(--green)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Layout */
+main{max-width:980px;margin:0 auto;padding:24px 16px 40px;display:flex;flex-direction:column;gap:16px}
+
+/* Selector card */
+.sel-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px}
+.sec-label{font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
+.sel-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:580px){.sel-grid{grid-template-columns:1fr}}
+.field label{display:block;font-size:.76rem;font-weight:500;color:var(--muted);margin-bottom:6px}
+.field select,.field input[type=date]{width:100%;background:var(--bg);color:var(--text);border:1.5px solid var(--border);border-radius:12px;padding:11px 14px;font-size:.93rem;font-family:inherit;outline:none;-webkit-appearance:none;appearance:none;transition:border-color .2s,box-shadow .2s;cursor:pointer}
+.field select:focus,.field input[type=date]:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,113,227,.13)}
+.spot-meta{margin-top:10px;display:flex;gap:7px;flex-wrap:wrap}
+.tag{font-size:.7rem;border-radius:20px;padding:3px 10px;font-weight:500}
+.tag-blue{background:var(--accent-light);color:var(--accent)}
+.tag-gray{background:#f0f0f5;color:var(--muted)}
+.tag-red{background:var(--red-bg);color:var(--red)}
+.tag-green{background:var(--green-bg);color:var(--green)}
+
+/* Status */
+#status-banner{border-radius:var(--radius);padding:20px 24px;display:flex;align-items:center;gap:16px;box-shadow:var(--shadow);transition:all .4s}
+.st-icon{font-size:2.2rem;flex-shrink:0}
+.st-body{flex:1}
+.st-title{font-size:1.08rem;font-weight:700;letter-spacing:-.02em}
+.st-sub{font-size:.8rem;margin-top:3px;opacity:.8}
+.s-green{background:var(--green-bg);border:1.5px solid #b8e6c1}.s-green .st-title{color:#1a5c28}
+.s-yellow{background:var(--yellow-bg);border:1.5px solid #f9d98a}.s-yellow .st-title{color:#7a4a00}
+.s-red{background:var(--red-bg);border:1.5px solid #f9c0c5}.s-red .st-title{color:var(--red)}
+.s-info{background:var(--accent-light);border:1.5px solid #b3d4f7}.s-info .st-title{color:var(--blue-dark)}
+
+/* Cards */
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.card-hdr{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.card-icon{font-size:1.1rem}
+.card-title{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.upd-badge{margin-left:auto;font-size:.63rem;color:var(--muted);font-style:italic;background:var(--bg);border-radius:20px;padding:2px 9px;white-space:nowrap}
+
+/* Grid */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+@media(max-width:660px){.grid2,.grid3{grid-template-columns:1fr}}
+
+/* Stat box */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat-box{background:var(--bg);border-radius:12px;padding:13px}
+.stat-val{font-size:1.45rem;font-weight:700;letter-spacing:-.03em}
+.stat-lbl{font-size:.68rem;color:var(--muted);margin-top:2px;font-weight:500}
+.stat-sub{font-size:.68rem;color:var(--muted);margin-top:3px}
+
+/* Tide */
+.tide-item{padding:12px 0;border-bottom:1px solid var(--border)}
+.tide-item:last-child{border-bottom:none}
+.tide-row{display:flex;align-items:center;gap:10px}
+.tide-time{font-size:1.2rem;font-weight:700;font-variant-numeric:tabular-nums;color:var(--text);min-width:56px}
+.tide-badge{font-size:.68rem;font-weight:600;padding:3px 9px;border-radius:20px}
+.hw{background:#e8f1fb;color:var(--accent)}
+.lw{background:var(--green-bg);color:var(--green)}
+.tide-h{margin-left:auto;font-size:.88rem;font-weight:500;color:var(--muted)}
+.dw-row{margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.dw-lbl{font-size:.72rem;color:var(--muted)}
+.dw-pill{font-size:.7rem;font-weight:600;border-radius:20px;padding:3px 10px}
+.dw-ok{background:var(--green-bg);color:var(--green)}
+.dw-now{background:var(--green);color:#fff;animation:pulse 1.5s infinite}
+.dw-past{background:#f0f0f5;color:var(--muted)}
+.corr-note{font-size:.65rem;color:var(--muted);margin-top:3px}
+
+/* Kentering hero */
+.kt-hero{border-radius:14px;padding:16px 18px;color:#fff;margin-bottom:14px}
+.kt-hero.green{background:linear-gradient(135deg,#28a745,#20913b)}
+.kt-hero.orange{background:linear-gradient(135deg,#f5a623,#e8941a)}
+.kh-lbl{font-size:.68rem;font-weight:600;opacity:.85;text-transform:uppercase;letter-spacing:.07em}
+.kh-time{font-size:2rem;font-weight:800;letter-spacing:-.04em;line-height:1.1}
+.kh-win{font-size:.82rem;opacity:.9;margin-top:4px}
+
+/* Graph */
+.graph-wrap{height:100px;margin-top:4px;position:relative}
+canvas{width:100%;height:100%;display:block}
+.graph-legend{display:flex;gap:12px;margin-top:7px;flex-wrap:wrap}
+.gl{display:flex;align-items:center;gap:5px;font-size:.66rem;color:var(--muted)}
+.gl-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+
+/* Wind */
+.wind-main{display:flex;align-items:center;gap:16px;margin-bottom:14px}
+.compass{width:58px;height:58px;flex-shrink:0;background:var(--bg);border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;position:relative}
+.needle{width:3px;height:20px;background:linear-gradient(to top,var(--red),var(--accent));border-radius:2px;position:absolute;bottom:50%;left:calc(50% - 1.5px);transform-origin:center bottom;transition:transform .6s cubic-bezier(.34,1.56,.64,1)}
+.wind-vals .dir{font-size:1.35rem;font-weight:700}
+.wind-vals .spd{font-size:.95rem;font-weight:600;margin-top:2px}
+.wind-vals .bft-lbl{font-size:.7rem;color:var(--muted);margin-top:2px}
+.bft-bar{height:6px;background:var(--bg);border-radius:3px;margin-top:10px;overflow:hidden}
+.bft-fill{height:100%;border-radius:3px;transition:width .6s}
+
+/* Vis */
+.vis-row{margin-bottom:10px}
+.vis-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.vis-label{font-size:.76rem;font-weight:500}
+.vis-val{font-size:.76rem;font-weight:700}
+.vis-bar{height:8px;background:var(--bg);border-radius:4px;overflow:hidden}
+.vis-fill{height:100%;border-radius:4px;transition:width .7s}
+.vis-scale{display:flex;justify-content:space-between;font-size:.63rem;color:var(--muted);margin-top:3px}
+
+/* Waves */
+.wave-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+
+/* Windy iframe */
+.windy-wrap{border-radius:14px;overflow:hidden;border:1.5px solid var(--border);height:340px;position:relative}
+.windy-wrap iframe{width:100%;height:100%;border:none;display:block}
+
+/* Alerts */
+.alert{border-radius:12px;padding:10px 14px;font-size:.76rem;display:flex;gap:8px;align-items:flex-start;margin-top:8px;line-height:1.5}
+.a-yellow{background:var(--yellow-bg);color:#7a4a00;border:1px solid #f9d98a}
+.a-red{background:var(--red-bg);color:#7a0010;border:1px solid #f9c0c5}
+.a-blue{background:var(--accent-light);color:var(--blue-dark);border:1px solid #b3d4f7}
+.a-green{background:var(--green-bg);color:#1a5c28;border:1px solid #b8e6c1}
+
+/* Sources */
+.sources{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 24px}
+.src-row{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+.src-row:last-child{border-bottom:none}
+.src-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.src-name{font-size:.78rem;font-weight:600;color:var(--text)}
+.src-desc{font-size:.7rem;color:var(--muted);margin-top:1px;line-height:1.4}
+.src-upd{font-size:.65rem;color:var(--muted);margin-top:2px;font-style:italic}
+.src-ok{font-size:.62rem;font-weight:600;border-radius:20px;padding:1px 7px;display:inline-block;margin-left:6px}
+.ok{background:var(--green-bg);color:var(--green)}
+.nok{background:var(--red-bg);color:var(--red)}
+
+/* Loader */
+.spin{display:inline-block;width:13px;height:13px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading{color:var(--muted);font-size:.8rem;display:flex;align-items:center;gap:8px;padding:8px 0}
+.divider{width:100%;height:1px;background:var(--border);margin:4px 0}
+
+/* Footer */
+footer{background:var(--white);border-top:1px solid var(--border);margin-top:8px}
+.footer-inner{max-width:980px;margin:0 auto;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.footer-left{display:flex;align-items:center;gap:12px}
+.footer-emoji{font-size:1.6rem}
+.footer-name{font-size:.88rem;font-weight:700;color:var(--text);letter-spacing:-.01em}
+.footer-club{font-size:.7rem;color:var(--muted);margin-top:2px}
+.footer-club strong{color:var(--text)}
+.footer-right{font-size:.68rem;color:var(--muted);text-align:right;line-height:1.5}
+@media(max-width:480px){.footer-right{display:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr">
+    <div class="logo">
+      <span class="logo-icon">🤿</span>
+      <div>
+        <div class="logo-text">Plongée Zélande</div>
+        <div class="logo-sub" id="hdr-date">—</div>
+      </div>
+    </div>
+    <div class="live-pill"><div class="live-dot"></div><span class="live-txt">Données en direct</span></div>
+  </div>
+</header>
+
+<main>
+
+  <!-- Sélecteurs -->
+  <div class="sel-card">
+    <div class="sec-label">Planifier ma plongée</div>
+    <div class="sel-grid">
+      <div class="field">
+        <label>📍 Site de plongée</label>
+        <select id="spot-select" onchange="onSelChange()">
+          <optgroup label="🌊 Oosterschelde (marées)">
+            <option value="zeelandbrug">Zeelandbrug — Pont de Zélande</option>
+            <option value="westbout">Westbout</option>
+            <option value="burghsluis">Burghsluis</option>
+            <option value="plompe">Plompe Toren — Tour Plompe</option>
+            <option value="heerenkeet">Heerenkeet (Flaauwers)</option>
+            <option value="borendamme">Borendamme (Kristenol)</option>
+            <option value="zoetersbout">Zoetersbout</option>
+            <option value="bergse">Bergse Diepsluis — Écluse Bergse</option>
+            <option value="stavenisse">Stavenisse — Port</option>
+            <option value="sint_annaland">Sint Annaland — Plage</option>
+            <option value="gorishoek">Gorishoek</option>
+            <option value="katshoek">Katshoek</option>
+            <option value="kattendijke">Kattendijke</option>
+            <option value="schelphoek">Schelphoek</option>
+            <option value="roompot">Roompot</option>
+            <option value="neeltje_jans">Neeltje Jans</option>
+          </optgroup>
+          <optgroup label="🏞️ Grevelingenmeer (sans marée)">
+            <option value="nieuwe_kerkweg">Nieuwe Kerkweg — Den Osse</option>
+            <option value="scharendijke">Scharendijke Ouest</option>
+            <option value="le_serpent">Le Serpent (Épave)</option>
+            <option value="dreischor">Dreischor</option>
+            <option value="dreischor_gemaal">Dreischor Gemaal</option>
+            <option value="brouwersdam">Brouwersdam (Blokkendam)</option>
+            <option value="grevelingendam">Grevelingendam</option>
+          </optgroup>
+          <optgroup label="🔵 Veerse Meer (sans marée)">
+            <option value="wolphaartsdijk">Wolphaartsdijk</option>
+            <option value="geersdijk">Geersdijk</option>
+            <option value="oranjeplaat">Oranjeplaat</option>
+            <option value="veerse_dam">Veerse Dam</option>
+          </optgroup>
+          <optgroup label="⚠️ Westerschelde (experts)">
+            <option value="vlissingen">Vlissingen</option>
+            <option value="terneuzen">Terneuzen</option>
+            <option value="wrak_ketel">Épave de Ketel</option>
+          </optgroup>
+        </select>
+        <div class="spot-meta" id="spot-tags"></div>
+      </div>
+      <div class="field">
+        <label>📅 Date de plongée</label>
+        <input type="date" id="dive-date" onchange="onSelChange()">
+      </div>
+    </div>
+  </div>
+
+  <!-- Status -->
+  <div id="status-banner" class="s-info">
+    <div class="st-icon" id="st-icon">⏳</div>
+    <div class="st-body">
+      <div class="st-title" id="st-title">Chargement des données…</div>
+      <div class="st-sub" id="st-sub">Connexion aux sources de données</div>
+    </div>
+  </div>
+
+  <!-- Marées -->
+  <div class="card">
+    <div class="card-hdr">
+      <span class="card-icon">🌊</span>
+      <span class="card-title">Marées & Fenêtres de Plongée</span>
+      <span class="upd-badge" id="upd-tide">—</span>
+    </div>
+    <div id="tide-content"><div class="loading"><span class="spin"></span> Chargement…</div></div>
+  </div>
+
+  <!-- Hauteur + Météo -->
+  <div class="grid2">
+    <div class="card">
+      <div class="card-hdr">
+        <span class="card-icon">💧</span>
+        <span class="card-title">Hauteur d'eau — 24h</span>
+        <span class="upd-badge" id="upd-water">—</span>
+      </div>
+      <div id="current-stats" class="stat-grid" style="margin-bottom:12px"></div>
+      <div class="graph-wrap"><canvas id="tideGraph"></canvas></div>
+      <div class="graph-legend">
+        <div class="gl"><div class="gl-dot" style="background:#0071e3"></div>Hauteur d'eau (RWS)</div>
+        <div class="gl"><div class="gl-dot" style="background:#28a745"></div>Fenêtre plongée</div>
+        <div class="gl"><div class="gl-dot" style="background:#f5a623"></div>Maintenant</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hdr">
+        <span class="card-icon">💨</span>
+        <span class="card-title">Météo & Vent</span>
+        <span class="upd-badge" id="upd-wx">—</span>
+      </div>
+      <div id="weather-content"><div class="loading"><span class="spin"></span> Chargement…</div></div>
+    </div>
+  </div>
+
+  <!-- Vagues Open-Meteo Marine -->
+  <div class="card">
+    <div class="card-hdr">
+      <span class="card-icon">🌊</span>
+      <span class="card-title">Vagues & Mer — Open-Meteo Marine</span>
+      <span class="upd-badge" id="upd-marine">—</span>
+    </div>
+    <div id="marine-content"><div class="loading"><span class="spin"></span> Chargement…</div></div>
+  </div>
+
+  <!-- Visibilité -->
+  <div class="card">
+    <div class="card-hdr">
+      <span class="card-icon">👁️</span>
+      <span class="card-title">Visibilité & Conditions Sous-Marines</span>
+      <span class="upd-badge" id="upd-vis">—</span>
+    </div>
+    <div id="vis-content"><div class="loading"><span class="spin"></span> Chargement…</div></div>
+  </div>
+
+  <!-- Windy -->
+  <div class="card">
+    <div class="card-hdr">
+      <span class="card-icon">🗺️</span>
+      <span class="card-title">Carte Météo Live — Windy</span>
+      <span class="upd-badge">Mise à jour continue</span>
+    </div>
+    <div class="windy-wrap" id="windy-wrap">
+      <iframe id="windy-iframe" allowfullscreen></iframe>
+    </div>
+    <div style="font-size:.68rem;color:var(--muted);margin-top:8px;text-align:center">
+      Carte interactive Windy.com · Couches disponibles : vent, vagues, température, précipitations
+    </div>
+  </div>
+
+  <!-- Sources -->
+  <div class="sources">
+    <div class="sec-label">Sources & Statut des données</div>
+    <div id="sources-list"></div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left">
+      <span class="footer-emoji">🤿</span>
+      <div>
+        <div class="footer-name">Louis TINANT</div>
+        <div class="footer-club">Plongeur 3⭐ &nbsp;·&nbsp; Club <strong>JUBARTE C.A.S. HABAY</strong></div>
+      </div>
+    </div>
+    <div class="footer-right">
+      Application créée pour les membres du club<br>
+      Données : RWS · Open-Meteo · Windy
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── SPOTS ──────────────────────────────────────────────────────
+const SPOTS = {
+  zeelandbrug:   {fr:"Zeelandbrug — Pont de Zélande",zone:"Oosterschelde",rws:"STAVNS",corrHW:-50,corrLW:-33,tidal:true,expert:false,noFlow:false,depth:25,vis:[3,8],lat:51.722,lon:3.898,desc:"Site emblématique. Piliers couverts d'anémones, homards, seiches au printemps."},
+  westbout:      {fr:"Westbout",zone:"Oosterschelde",rws:"STAVNS",corrHW:-30,corrLW:-33,tidal:true,expert:false,noFlow:false,depth:20,vis:[3,7],lat:51.650,lon:3.870,desc:"Fond de pierres basaltiques, courant modéré."},
+  burghsluis:    {fr:"Burghsluis",zone:"Oosterschelde",rws:"STAVNS",corrHW:-25,corrLW:-28,tidal:true,expert:false,noFlow:false,depth:18,vis:[3,8],lat:51.670,lon:3.930,desc:"Digue couverte de vie marine diversifiée."},
+  plompe:        {fr:"Plompe Toren — Tour Plompe",zone:"Oosterschelde",rws:"STAVNS",corrHW:-20,corrLW:-23,tidal:true,expert:false,noFlow:false,depth:18,vis:[2,7],lat:51.623,lon:3.870,desc:"Village englouti depuis 1530. Murs visibles entre 5–18m."},
+  heerenkeet:    {fr:"Heerenkeet (Flaauwers)",zone:"Oosterschelde",rws:"STAVNS",corrHW:-35,corrLW:-23,tidal:true,expert:false,noFlow:false,depth:16,vis:[3,7],lat:51.680,lon:3.940,desc:"Site calme, bien adapté aux plongeurs intermédiaires."},
+  borendamme:    {fr:"Borendamme (Kristenol)",zone:"Oosterschelde",rws:"STAVNS",corrHW:-48,corrLW:-25,tidal:true,expert:false,noFlow:false,depth:20,vis:[3,8],lat:51.710,lon:3.890,desc:"Digue couverte d'éponges et d'anémones colorées."},
+  zoetersbout:   {fr:"Zoetersbout",zone:"Oosterschelde",rws:"STAVNS",corrHW:0,corrLW:0,tidal:false,expert:false,noFlow:true,depth:22,vis:[4,10],lat:51.637,lon:3.997,desc:"Bras mort sans courant. Idéal débutants. Seiches fréquentes."},
+  bergse:        {fr:"Bergse Diepsluis — Écluse Bergse",zone:"Oosterschelde",rws:"STAVNS",corrHW:0,corrLW:0,tidal:false,expert:false,noFlow:true,depth:18,vis:[4,10],lat:51.573,lon:4.073,desc:"Sans courant. Site de référence pour seiches (dès 12°C)."},
+  stavenisse:    {fr:"Stavenisse — Port",zone:"Oosterschelde",rws:"STAVNS",corrHW:0,corrLW:0,tidal:true,expert:false,noFlow:false,depth:15,vis:[3,8],lat:51.598,lon:4.010,desc:"Station de référence Oosterschelde. Port avec faune riche."},
+  sint_annaland: {fr:"Sint Annaland — Plage",zone:"Oosterschelde",rws:"STAVNS",corrHW:40,corrLW:50,tidal:true,expert:false,noFlow:false,depth:15,vis:[3,7],lat:51.630,lon:4.132,desc:"Kentering décalée. Plage sableuse, vie variée."},
+  gorishoek:     {fr:"Gorishoek",zone:"Oosterschelde",rws:"STAVNS",corrHW:-15,corrLW:-18,tidal:true,expert:false,noFlow:false,depth:20,vis:[4,9],lat:51.605,lon:3.978,desc:"Site populaire avec vulstation. Riche biodiversité."},
+  katshoek:      {fr:"Katshoek",zone:"Oosterschelde",rws:"STAVNS",corrHW:20,corrLW:15,tidal:true,expert:false,noFlow:false,depth:22,vis:[3,8],lat:51.575,lon:3.909,desc:"Station automatique WAC. Fond de blocs."},
+  kattendijke:   {fr:"Kattendijke",zone:"Oosterschelde",rws:"STAVNS",corrHW:25,corrLW:20,tidal:true,expert:false,noFlow:false,depth:18,vis:[3,8],lat:51.571,lon:3.942,desc:"Zone calme au nord de l'Oosterschelde."},
+  schelphoek:    {fr:"Schelphoek",zone:"Oosterschelde",rws:"STAVNS",corrHW:-10,corrLW:-12,tidal:true,expert:false,noFlow:false,depth:25,vis:[3,9],lat:51.656,lon:3.837,desc:"Blocs rocheux impressionnants. Homards et congres."},
+  roompot:       {fr:"Roompot",zone:"Oosterschelde",rws:"STAVNS",corrHW:-40,corrLW:-30,tidal:true,expert:true,noFlow:false,depth:20,vis:[3,7],lat:51.625,lon:3.698,desc:"Proche du barrage anti-tempête. Courants puissants."},
+  neeltje_jans:  {fr:"Neeltje Jans",zone:"Oosterschelde",rws:"STAVNS",corrHW:-45,corrLW:-35,tidal:true,expert:true,noFlow:false,depth:18,vis:[3,8],lat:51.626,lon:3.718,desc:"Vue sur la Stormvloedkering. Courant fort."},
+  nieuwe_kerkweg:{fr:"Nieuwe Kerkweg — Den Osse",zone:"Grevelingenmeer",rws:"BRKDMDN",corrHW:0,corrLW:0,tidal:false,expert:false,noFlow:true,depth:30,vis:[5,14],lat:51.741,lon:3.955,desc:"Site très populaire. Plaques béton colonisées, anguilles, anémones."},
+  scharendijke:  {fr:"Scharendijke Ouest",zone:"Grevelingenmeer",rws:"BRKDMDN",corrHW:0,corrLW:0,tidal:false,expert:false,noFlow:true,depth:24,vis:[5,12],lat:51.742,lon:3.878,desc:"Reefballs depuis 2001. Épave Le Serpent à 23m."},
+  le_serpent:    {fr:"Le Serpent (Épave)",zone:"Grevelingenmeer",rws:"BRKDMDN",corrHW:0,corrLW:0,tidal:false,expert:false,noFlow:true,depth:23,vis:[5,14],lat:51.741,lon:3.876,desc:"Navire de 60m coulé en 2011 à 23m. Site épave exceptionnel."},
+  dreischor:     {fr:"Dreischor",zone:"Grevelingenmeer",rws:"BRKDMDN",corrHW:0,corrLW:0,tidal:false,expert:false,noFlow:true,depth:30,vis:[5,15],lat:51.740,lon:3.869,desc:"Référence photographes sous-marins. Éponges, anémones jusqu'à 30m."},
+  dreischor_gemaal:{fr:"Dreischor Gemaal",zone:"Grevelingenmeer",rws:"BRKDMDN",corrHW:0,corrLW:0,tidal:false,expert:false,noFlow:true,depth:20,vis:[5,12],lat:51.737,lon:3.862,desc:"Station de pompage. Vulstation et WC à 100m."},
+  brouwersdam:   {fr:"Brouwersdam (Blokkendam)",zone:"Grevelingenmeer",rws:"BRKDMDN",corrHW:0,corrLW:0,tidal:false,expert:false,noFlow:true,depth:18,vis:[5,15],lat:51.739,lon:3.856,desc:"Mur de blocs côté mer du Nord. Excellent zicht."},
+  grevelingendam:{fr:"Grevelingendam",zone:"Grevelingenmeer",rws:"BRKDMDN",corrHW:0,corrLW:0,tidal:false,expert:false,noFlow:true,depth:15,vis:[5,12],lat:51.751,lon:3.877,desc:"Côté Grevelingen du barrage. Accès facile."},
+  wolphaartsdijk:{fr:"Wolphaartsdijk",zone:"Veerse Meer",rws:null,corrHW:0,corrLW:0,tidal:false,expert:false,noFlow:true,depth:12,vis:[4,10],lat:51.558,lon:3.635,desc:"Fond coloré, bon zicht. Idéal toute l'année."},
+  geersdijk:     {fr:"Geersdijk",zone:"Veerse Meer",rws:null,corrHW:0,corrLW:0,tidal:false,expert:false,noFlow:true,depth:15,vis:[4,10],lat:51.565,lon:3.757,desc:"Petite plage d'accès. Seiches en saison à 7m."},
+  oranjeplaat:   {fr:"Oranjeplaat",zone:"Veerse Meer",rws:null,corrHW:0,corrLW:0,tidal:false,expert:false,noFlow:true,depth:12,vis:[4,9],lat:51.533,lon:3.617,desc:"Site calme du Veerse Meer."},
+  veerse_dam:    {fr:"Veerse Dam",zone:"Veerse Meer",rws:null,corrHW:0,corrLW:0,tidal:false,expert:false,noFlow:true,depth:10,vis:[3,8],lat:51.541,lon:3.673,desc:"Barrage du Veerse Meer. Accès côté lac."},
+  vlissingen:    {fr:"Vlissingen",zone:"Westerschelde",rws:"VLISSGN",corrHW:0,corrLW:0,tidal:true,expert:true,noFlow:false,depth:15,vis:[1,4],lat:51.443,lon:3.572,desc:"Forts courants et trafic maritime. Experts uniquement."},
+  terneuzen:     {fr:"Terneuzen",zone:"Westerschelde",rws:"TERNZN",corrHW:0,corrLW:0,tidal:true,expert:true,noFlow:false,depth:15,vis:[1,3],lat:51.333,lon:3.830,desc:"Zone portuaire. Forts courants. Accès réglementé."},
+  wrak_ketel:    {fr:"Épave de Ketel",zone:"Westerschelde",rws:"VLISSGN",corrHW:0,corrLW:0,tidal:true,expert:true,noFlow:false,depth:22,vis:[1,5],lat:51.380,lon:3.690,desc:"Épave connue. Boot-diving uniquement. Expérimentés."},
+};
+
+const RWS_MAP = {STAVNS:"STAVNS",BRKDMDN:"BRKDMDN",VLISSGN:"VLISSGN",TERNZN:"TERNZN"};
+const SEA_TEMPS = [5,5,7,9,12,15,18,19,17,14,11,7];
+const MONTHS_FR = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+const DIRS = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSO","SO","OSO","O","ONO","NO","NNO"];
+const dir = d => DIRS[Math.round(d/22.5)%16];
+const p2 = n => String(Math.abs(n)).padStart(2,'0');
+const fmtT = d => `${p2(d.getHours())}:${p2(d.getMinutes())}`;
+const fmtH = v => `${v>=0?'+':''}${(v/100).toFixed(2)} m NAP`;
+const now_ts = () => new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+
+// ── Init ──
+(function(){
+  const d = new Date();
+  const inp = document.getElementById('dive-date');
+  const iso = d.toISOString().split('T')[0];
+  inp.value = iso; inp.min = iso;
+  const mx = new Date(d); mx.setDate(mx.getDate()+7);
+  inp.max = mx.toISOString().split('T')[0];
+  document.getElementById('hdr-date').textContent =
+    d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+})();
+
+// ── Fetch RWS Tide ──
+async function fetchTide(rwsCode, date) {
+  const code = RWS_MAP[rwsCode]; if(!code) return [];
+  const s = new Date(date+'T00:00:00+01:00'), e = new Date(date+'T23:59:59+01:00');
+  const fmt = d => d.toISOString().replace(/\.\d{3}Z$/,'+00:00');
+  try {
+    const r = await fetch('https://waterwebservices.rijkswaterstaat.nl/ONLINEWAARNEMINGENSERVICES_DBO/OphalenWaarnemingen',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({Locatie:{Code:code,X:0,Y:0},AquoPlusWaarnemingMetadata:{AquoMetadata:{Compartiment:{Code:"OW"},Grootheid:{Code:"WATHTE"}}},Periode:{Begindatumtijd:fmt(s),Einddatumtijd:fmt(e)}})
+    });
+    const d = await r.json();
+    if(!d.WaarnemingenLijst?.[0]?.MetingenLijst) throw 0;
+    return d.WaarnemingenLijst[0].MetingenLijst.map(m=>({t:new Date(m.Tijdstip),v:parseFloat(m.Meetwaarde?.Waarde_Numeriek??m.Meetwaarde?.Waarde_Alfanumeriek)})).filter(m=>!isNaN(m.v));
+  } catch { return []; }
+}
+
+// ── Fetch Open-Meteo Standard ──
+async function fetchWeather(lat,lon,date) {
+  try {
+    const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,visibility&hourly=temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m&wind_speed_unit=ms&forecast_days=2&timezone=Europe/Amsterdam`);
+    return await r.json();
+  } catch { return null; }
+}
+
+// ── Fetch Open-Meteo Marine ──
+async function fetchMarine(lat,lon,date) {
+  try {
+    const r = await fetch(`https://marine-api.open-meteo.com/v1/marine?latitude=${lat}&longitude=${lon}&current=wave_height,wave_direction,wave_period,wind_wave_height,swell_wave_height,swell_wave_direction,swell_wave_period&hourly=wave_height,wave_period&forecast_days=2&timezone=Europe/Amsterdam`);
+    return await r.json();
+  } catch { return null; }
+}
+
+// ── Extremes ──
+function detectExtremes(series) {
+  const ex=[];
+  for(let i=2;i<series.length-2;i++){
+    const v=series[i].v,p1=series[i-1].v,p2s=series[i-2].v,n1=series[i+1].v,n2=series[i+2].v;
+    if(v>p2s&&v>p1&&v>=n1&&v>=n2) ex.push({t:series[i].t,v,type:'HW'});
+    else if(v<p2s&&v<p1&&v<=n1&&v<=n2) ex.push({t:series[i].t,v,type:'LW'});
+  }
+  return ex;
+}
+function fallbackTides(date) {
+  const base=new Date(date+'T00:00:00'); const period=6.21*3600000;
+  const offset=((Date.now()%(period*2))+period)%(period*2);
+  const tides=[];
+  for(let i=0;i<5;i++){
+    const t=new Date(base.getTime()+offset+i*period);
+    if(t.toDateString()===new Date(date).toDateString()) tides.push({t,v:i%2===0?185:15,type:i%2===0?'HW':'LW'});
+  }
+  return tides;
+}
+function fallbackSeries(date,ex) {
+  const base=new Date(date+'T00:00:00'); const s=[];
+  for(let m=0;m<1440;m+=10){
+    const t=new Date(base.getTime()+m*60000);
+    if(ex.length<2){s.push({t,v:100});continue;}
+    const sorted=[...ex].sort((a,b)=>Math.abs(a.t-t)-Math.abs(b.t-t));
+    const [a,b]=sorted.slice(0,2).sort((x,y)=>x.t-y.t);
+    if(!a||!b){s.push({t,v:100});continue;}
+    const f=Math.max(0,Math.min(1,(t-a.t)/(b.t-a.t)));
+    s.push({t,v:a.v+(b.v-a.v)*(1-Math.cos(f*Math.PI))/2});
+  }
+  return s;
+}
+
+// ── Graph ──
+function drawGraph(series,corrected,dateStr){
+  const cvs=document.getElementById('tideGraph');
+  if(!cvs||!series.length) return;
+  const ctx=cvs.getContext('2d');
+  const dpr=devicePixelRatio;
+  cvs.width=cvs.offsetWidth*dpr; cvs.height=cvs.offsetHeight*dpr;
+  ctx.scale(dpr,dpr);
+  const W=cvs.offsetWidth,H=cvs.offsetHeight;
+  const minV=Math.min(...series.map(s=>s.v)), maxV=Math.max(...series.map(s=>s.v)), range=maxV-minV||1;
+  const dayStart=new Date(dateStr+'T00:00:00');
+  const nY=v=>H-((v-minV)/range)*(H*.78)-H*.06;
+  const nX=t=>(t-dayStart)/86400000*W;
+  // BG
+  ctx.fillStyle='#f5f5f7'; ctx.fillRect(0,0,W,H);
+  // Grid lines
+  ctx.strokeStyle='#e5e5ea'; ctx.lineWidth=1;
+  for(let h=0;h<=24;h+=6){ ctx.beginPath();ctx.moveTo(h/24*W,0);ctx.lineTo(h/24*W,H);ctx.stroke(); }
+  // Dive windows
+  corrected.forEach(e=>{
+    const x1=nX(e.win.from),x2=nX(e.win.to);
+    if(x2<0||x1>W) return;
+    ctx.fillStyle='rgba(40,167,69,.1)'; ctx.fillRect(Math.max(0,x1),0,Math.min(W,x2)-Math.max(0,x1),H);
+    ctx.strokeStyle='rgba(40,167,69,.4)'; ctx.lineWidth=1; ctx.setLineDash([3,3]);
+    [x1,x2].forEach(x=>{ if(x>=0&&x<=W){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();} });
+    ctx.setLineDash([]);
+  });
+  // Fill
+  const g=ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,'rgba(0,113,227,.15)'); g.addColorStop(1,'rgba(0,113,227,.01)');
+  ctx.beginPath();
+  series.forEach((s,i)=>{ const x=nX(s.t),y=nY(s.v); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+  ctx.lineTo(nX(series[series.length-1].t),H); ctx.lineTo(nX(series[0].t),H);
+  ctx.fillStyle=g; ctx.fill();
+  // Line
+  ctx.beginPath();
+  series.forEach((s,i)=>{ i===0?ctx.moveTo(nX(s.t),nY(s.v)):ctx.lineTo(nX(s.t),nY(s.v)); });
+  ctx.strokeStyle='#0071e3'; ctx.lineWidth=2; ctx.stroke();
+  // Now
+  const now=new Date();
+  if(dateStr===now.toISOString().split('T')[0]){
+    const nx=nX(now);
+    ctx.strokeStyle='#f5a623'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(nx,0); ctx.lineTo(nx,H); ctx.stroke(); ctx.setLineDash([]);
+  }
+  // Labels
+  ctx.fillStyle='#a0a0a8'; ctx.font=`${9}px -apple-system`;
+  ['00h','06h','12h','18h','24h'].forEach((l,i)=>{ const x=i/4*W; ctx.fillText(l,x<W-20?x+3:x-18,H-4); });
+}
+
+// ── Render Tides ──
+function renderTides(extremes,spot,dateStr){
+  const now=new Date(), isToday=dateStr===now.toISOString().split('T')[0];
+  const corrected=extremes.map(e=>{
+    const c=e.type==='HW'?spot.corrHW:spot.corrLW;
+    const kt=new Date(e.t.getTime()+c*60000);
+    return{...e,win:{kt,from:new Date(kt-30*60000),to:new Date(kt.getTime()+30*60000)},corr:c};
+  });
+  let html='';
+  if(spot.noFlow){
+    html=`<div class="alert a-green">✅ <strong>Pas de courant</strong> — Ce site peut être plongé à tout moment, sans contrainte de marée.</div>`;
+  } else {
+    if(isToday){
+      const inW=corrected.find(e=>now>=e.win.from&&now<=e.win.to);
+      const next=corrected.find(e=>e.win.from>now);
+      if(inW) html+=`<div class="kt-hero green"><div class="kh-lbl">🟢 Fenêtre en cours</div><div class="kh-time">${fmtT(inW.win.from)} — ${fmtT(inW.win.to)}</div><div class="kh-win">Kentering à ${fmtT(inW.win.kt)} · Plongez maintenant !</div></div>`;
+      else if(next){ const m=Math.round((next.win.from-now)/60000); html+=`<div class="kt-hero orange"><div class="kh-lbl">⏱ Prochaine fenêtre dans ${m<60?m+' min':Math.floor(m/60)+'h'+p2(m%60)}</div><div class="kh-time">${fmtT(next.win.from)} — ${fmtT(next.win.to)}</div><div class="kh-win">Kentering à ${fmtT(next.win.kt)}</div></div>`; }
+    }
+    corrected.forEach(e=>{
+      const past=isToday&&e.win.to<now, inW=isToday&&now>=e.win.from&&now<=e.win.to;
+      html+=`<div class="tide-item" style="${past?'opacity:.38':''}">
+        <div class="tide-row">
+          <span class="tide-time">${fmtT(e.t)}</span>
+          <span class="tide-badge ${e.type==='HW'?'hw':'lw'}">${e.type==='HW'?'▲ Pleine mer':'▼ Basse mer'}</span>
+          <span class="tide-h">${fmtH(e.v)}</span>
+        </div>
+        <div class="dw-row">
+          <span class="dw-lbl">Plonger :</span>
+          <span class="dw-pill ${inW?'dw-now':past?'dw-past':'dw-ok'}">${fmtT(e.win.from)} → ${fmtT(e.win.to)}</span>
+        </div>
+        ${e.corr!==0?`<div class="corr-note">Correction NOB ${e.corr>0?'+':''}${e.corr} min vs Stavenisse · Sources : duikspotter.nl, sovscaldis.nl</div>`:''}
+      </div>`;
+    });
+    if(spot.expert) html+=`<div class="alert a-red">⚠️ <strong>Experts uniquement</strong> — Courants violents / trafic maritime. Certification avancée requise.</div>`;
+  }
+  document.getElementById('tide-content').innerHTML=html;
+  document.getElementById('upd-tide').textContent=`Mis à jour ${now_ts()}`;
+  return corrected;
+}
+
+// ── Render Stats ──
+function renderStats(series,spot,corrected){
+  const el=document.getElementById('current-stats');
+  if(!series.length||spot.noFlow){
+    el.innerHTML=`<div class="stat-box"><div class="stat-val" style="color:var(--green)">—</div><div class="stat-lbl">💧 Courant</div><div class="stat-sub">Aucune marée</div></div><div class="stat-box"><div class="stat-val">—</div><div class="stat-lbl">📊 Marnage</div></div>`;
+    document.getElementById('upd-water').textContent='Sans marée';
+    return;
+  }
+  const now=new Date(); const c=series.reduce((a,b)=>Math.abs(b.t-now)<Math.abs(a.t-now)?b:a);
+  const mn=Math.min(...series.map(s=>s.v)), mx=Math.max(...series.map(s=>s.v));
+  const mg=((mx-mn)/100).toFixed(2); const idx=series.indexOf(c);
+  const trend=idx<series.length/2?'Montant ▲':'Descendant ▼';
+  el.innerHTML=`
+    <div class="stat-box"><div class="stat-val" style="color:var(--accent)">${(c.v/100).toFixed(2)}m</div><div class="stat-lbl">💧 Hauteur actuelle</div><div class="stat-sub">${trend} · Source RWS</div></div>
+    <div class="stat-box"><div class="stat-val">${mg}m</div><div class="stat-lbl">📊 Marnage</div><div class="stat-sub">${parseFloat(mg)>1.5?'⚠️ Fort':'✅ Normal'}</div></div>`;
+  document.getElementById('upd-water').textContent=`Mis à jour ${now_ts()}`;
+}
+
+// ── Render Weather ──
+function renderWeather(data,dateStr){
+  const el=document.getElementById('weather-content');
+  if(!data){el.innerHTML='<div class="loading">Météo indisponible</div>';return;}
+  const isToday=dateStr===new Date().toISOString().split('T')[0];
+  let ws,wd,wg,temp;
+  if(isToday&&data.current){ ws=data.current.wind_speed_10m; wd=data.current.wind_direction_10m; wg=data.current.wind_gusts_10m; temp=data.current.temperature_2m; }
+  else if(data.hourly){ const idx=data.hourly.time?.findIndex(t=>t.startsWith(dateStr+'T12'))||0; ws=data.hourly.wind_speed_10m?.[idx]; wd=data.hourly.wind_direction_10m?.[idx]; wg=data.hourly.wind_gusts_10m?.[idx]; temp=data.hourly.temperature_2m?.[idx]; }
+  if(!ws&&ws!==0){el.innerHTML='<div class="loading">Données indisponibles</div>';return;}
+  const bft=[0,1.5,3.3,5.5,7.9,10.7,13.8,17.1].filter(v=>ws>=v).length-1;
+  const bftC=bft<=3?'var(--green)':bft<=5?'var(--yellow)':'var(--red)';
+  const bftL=['Calme','Très légère brise','Légère brise','Petite brise','Jolie brise','Bonne brise','Grand frais','Fort coup de vent'][Math.min(bft,7)];
+  el.innerHTML=`
+    <div class="wind-main">
+      <div class="compass"><div class="needle" style="transform:rotate(${wd}deg)"></div></div>
+      <div class="wind-vals">
+        <div class="dir">${dir(wd)}</div>
+        <div class="spd" style="color:${bftC}">${ws?.toFixed(1)} m/s — Bf ${bft}</div>
+        <div class="bft-lbl">${bftL}</div>
+      </div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-box"><div class="stat-val">${temp?.toFixed(1)}°C</div><div class="stat-lbl">🌡️ Air</div><div class="stat-sub">Open-Meteo</div></div>
+      <div class="stat-box"><div class="stat-val" style="color:var(--accent)">${SEA_TEMPS[new Date().getMonth()]}°C</div><div class="stat-lbl">🌊 Eau (saisonnière)</div></div>
+      <div class="stat-box"><div class="stat-val">${wg?.toFixed(1)} m/s</div><div class="stat-lbl">💨 Rafales</div></div>
+      <div class="stat-box"><div class="stat-val">${bft}</div><div class="stat-lbl">⚓ Beaufort</div></div>
+    </div>
+    <div class="bft-bar"><div class="bft-fill" style="width:${Math.min(100,bft/8*100)}%;background:${bftC}"></div></div>
+    ${bft>=5?`<div class="alert a-yellow">⚠️ Vent fort (Bf ${bft}) — Mise à l'eau difficile en surface.</div>`:''}
+    ${bft>=7?`<div class="alert a-red">🚫 Vent très fort — Plongée déconseillée.</div>`:''}`;
+  document.getElementById('upd-wx').textContent=`Mis à jour ${now_ts()}`;
+}
+
+// ── Render Marine ──
+function renderMarine(data,spot){
+  const el=document.getElementById('marine-content');
+  if(!data||!data.current){
+    const isLake=spot.zone==='Grevelingenmeer'||spot.zone==='Veerse Meer';
+    el.innerHTML=`<div class="alert a-blue">ℹ️ ${isLake?'Eaux intérieures (lac) — données de vagues non applicables.':'Données marines momentanément indisponibles.'}</div>`;
+    document.getElementById('upd-marine').textContent='Non applicable';
+    return;
+  }
+  const c=data.current;
+  const wh=(c.wave_height??0).toFixed(2), wp=(c.wave_period??0).toFixed(1);
+  const wd2=c.wave_direction??0;
+  const swh=(c.swell_wave_height??0).toFixed(2), swp=(c.swell_wave_period??0).toFixed(1);
+  const wwh=(c.wind_wave_height??0).toFixed(2);
+  const wColor=parseFloat(wh)<0.3?'var(--green)':parseFloat(wh)<0.8?'var(--yellow)':'var(--red)';
+  const wLabel=parseFloat(wh)<0.3?'Mer belle / calme':parseFloat(wh)<0.5?'Mer peu agitée':parseFloat(wh)<1.2?'Mer agitée':'Mer forte';
+  el.innerHTML=`
+    <div class="wave-grid">
+      <div class="stat-box"><div class="stat-val" style="color:${wColor}">${wh}m</div><div class="stat-lbl">🌊 Hauteur vagues</div><div class="stat-sub">${wLabel}</div></div>
+      <div class="stat-box"><div class="stat-val">${wp}s</div><div class="stat-lbl">⏱ Période</div><div class="stat-sub">Open-Meteo Marine</div></div>
+      <div class="stat-box"><div class="stat-val">${dir(wd2)}</div><div class="stat-lbl">🧭 Direction</div><div class="stat-sub">${wd2}°</div></div>
+      <div class="stat-box"><div class="stat-val">${swh}m</div><div class="stat-lbl">🌀 Houle</div><div class="stat-sub">Période ${swp}s</div></div>
+      <div class="stat-box"><div class="stat-val">${wwh}m</div><div class="stat-lbl">💨 Vague de vent</div></div>
+      <div class="stat-box"><div class="stat-val">${dir(c.swell_wave_direction??0)}</div><div class="stat-lbl">🧭 Dir. houle</div></div>
+    </div>
+    ${parseFloat(wh)>0.8?`<div class="alert a-yellow">⚠️ Vagues significatives — Conditions de surface perturbées.</div>`:''}`;
+  document.getElementById('upd-marine').textContent=`Mis à jour ${now_ts()}`;
+}
+
+// ── Render Visibility ──
+function renderVis(spot,weather,marine){
+  const el=document.getElementById('vis-content');
+  const m=new Date().getMonth();
+  let uw=spot.zone==='Grevelingenmeer'?9:spot.zone==='Veerse Meer'?7:spot.zone==='Westerschelde'?2:5;
+  if(m>=2&&m<=4) uw+=2; if(m>=6&&m<=8) uw+=1; if(m>=11||m<=1) uw-=1;
+  if(marine?.current?.wave_height>0.8) uw-=2;
+  uw=Math.max(1,Math.min(uw,15));
+  const [vMin,vMax]=spot.vis;
+  const uvC=uw>=7?'var(--green)':uw>=4?'var(--yellow)':'var(--red)';
+  const uvL=uw>=7?'Bon':uw>=4?'Moyen':'Faible';
+  const wvis=weather?.current?.visibility;
+  const surfV=wvis?(wvis/1000).toFixed(0)+' km':'—';
+  const spring=m>=2&&m<=5;
+  el.innerHTML=`
+    <div class="stat-grid" style="margin-bottom:14px">
+      <div class="stat-box"><div class="stat-val" style="color:${uvC}">${vMin}–${vMax}m</div><div class="stat-lbl">👓 Zicht typique</div><div class="stat-sub">${uvL} · Estimé : ~${uw}m</div></div>
+      <div class="stat-box"><div class="stat-val">${surfV}</div><div class="stat-lbl">🌥️ Visibilité surface</div><div class="stat-sub">Open-Meteo</div></div>
+      <div class="stat-box"><div class="stat-val">${spot.depth}m</div><div class="stat-lbl">🪸 Profondeur max</div></div>
+      <div class="stat-box"><div class="stat-val" style="color:var(--accent)">${SEA_TEMPS[m]}°C</div><div class="stat-lbl">🌡️ Eau ${MONTHS_FR[m]}</div></div>
+    </div>
+    <div class="vis-row">
+      <div class="vis-top"><span class="vis-label">Visibilité sous-marine estimée</span><span class="vis-val" style="color:${uvC}">${uw}m</span></div>
+      <div class="vis-bar"><div class="vis-fill" style="width:${Math.min(100,uw/15*100)}%;background:${uvC}"></div></div>
+      <div class="vis-scale"><span>0m</span><span>5m</span><span>10m</span><span>15m+</span></div>
+    </div>
+    <div style="margin-top:12px;font-size:.78rem;color:var(--muted);line-height:1.6">${spot.desc}</div>
+    ${spring&&spot.zone==='Oosterschelde'?`<div class="alert a-blue">🦑 Saison des seiches — Présentes dès 12°C eau. Période de reproduction, vie marine abondante.</div>`:''}
+    ${spot.expert?`<div class="alert a-red">⚠️ Site réservé aux plongeurs très expérimentés.</div>`:''}`;
+  document.getElementById('upd-vis').textContent=`Mis à jour ${now_ts()}`;
+}
+
+// ── Status ──
+function updateStatus(corrected,spot,dateStr){
+  const now=new Date(), isToday=dateStr===now.toISOString().split('T')[0];
+  const b=document.getElementById('status-banner');
+  const [ic,ti,su]=[document.getElementById('st-icon'),document.getElementById('st-title'),document.getElementById('st-sub')];
+  if(spot.noFlow){ b.className='s-info'; ic.textContent='✅'; ti.textContent='Plongée possible à tout moment'; su.textContent=`${spot.fr} — Pas de courant de marée`; return; }
+  if(!isToday){ b.className='s-info'; ic.textContent='📅'; ti.textContent=`Planification — ${new Date(dateStr).toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})}`;
+    su.textContent=corrected.map(e=>`${fmtT(e.win.from)}–${fmtT(e.win.to)}`).join(' · ')||'—'; return; }
+  const inW=corrected.find(e=>now>=e.win.from&&now<=e.win.to);
+  const next=corrected.find(e=>e.win.from>now);
+  if(inW){ b.className='s-green'; ic.textContent='🟢'; ti.textContent='Conditions optimales — Plongez maintenant !'; su.textContent=`Fin de fenêtre : ${fmtT(inW.win.to)} · ${spot.fr}`; }
+  else if(next){ const m=Math.round((next.win.from-now)/60000);
+    if(m<=45){ b.className='s-yellow'; ic.textContent='🟡'; ti.textContent=`Préparez-vous — kentering dans ${m} min`; su.textContent=`Fenêtre : ${fmtT(next.win.from)} → ${fmtT(next.win.to)}`; }
+    else { b.className='s-red'; ic.textContent='🔴'; ti.textContent='Courant trop fort — attendez la kentering'; su.textContent=`Prochaine fenêtre : ${fmtT(next.win.from)} (dans ${Math.floor(m/60)}h${p2(m%60)})`; }
+  } else { b.className='s-red'; ic.textContent='🔴'; ti.textContent="Aucune fenêtre disponible aujourd'hui"; su.textContent=spot.fr; }
+}
+
+// ── Tags ──
+function renderTags(spot){
+  const z={Oosterschelde:'tag-blue',Grevelingenmeer:'tag-green',Westerschelde:'tag-red','Veerse Meer':'tag-blue'}[spot.zone]||'tag-gray';
+  document.getElementById('spot-tags').innerHTML=[
+    `<span class="tag ${z}">${spot.zone}</span>`,
+    spot.noFlow?`<span class="tag tag-green">Sans marée ✓</span>`:`<span class="tag tag-gray">Marées · Kentering</span>`,
+    `<span class="tag tag-gray">Max ${spot.depth}m</span>`,
+    `<span class="tag tag-gray">Zicht ${spot.vis[0]}–${spot.vis[1]}m</span>`,
+    spot.expert?`<span class="tag tag-red">⚠️ Experts</span>`:'',
+  ].join('');
+}
+
+// ── Windy ──
+function updateWindy(spot){
+  const iframe=document.getElementById('windy-iframe');
+  const url=`https://embed.windy.com/embed2.html?lat=${spot.lat}&lon=${spot.lon}&detailLat=${spot.lat}&detailLon=${spot.lon}&width=650&height=340&zoom=9&level=surface&overlay=wind&product=ecmwf&menu=&message=true&marker=true&calendar=now&pressure=true&type=map&location=coordinates&detail=false&metricWind=m%2Fs&metricTemp=%C2%B0C&radarRange=-1`;
+  iframe.src=url;
+}
+
+// ── Sources ──
+function renderSources(tideOk,wxOk,marineOk){
+  const ts=now_ts();
+  document.getElementById('sources-list').innerHTML=[
+    {c:'#0071e3',n:'Rijkswaterstaat — Waterwebservices',d:'Hauteur d\'eau en temps réel · Stations STAVNS, BRKDMDN, VLISSGN, TERNZN',u:`Fréquence 10 min · Récupéré à ${ts}`,ok:tideOk},
+    {c:'#28a745',n:'Open-Meteo (Standard)',d:'Météo, vent, température air, visibilité · Modèle ECMWF',u:`Résolution horaire · Récupéré à ${ts}`,ok:wxOk},
+    {c:'#0ea5e9',n:'Open-Meteo Marine',d:'Hauteur vagues, période, direction, houle · Modèle ERA5',u:`Résolution horaire · Récupéré à ${ts}`,ok:marineOk},
+    {c:'#7c3aed',n:'Windy.com',d:'Carte météo interactive en temps réel · Modèle ECMWF',u:'Mise à jour continue (iframe live)',ok:true},
+    {c:'#f5a623',n:'NOB — Nederlandse Onderwatersport Bond',d:'Corrections kentering par site · Croisées : duikspotter.nl, sovscaldis.nl, duikersgids.nl',u:'Données empiriques, vérifiées 2025. Tolérance ±15 min selon conditions.',ok:null},
+  ].map(r=>`<div class="src-row"><div class="src-dot" style="background:${r.c}"></div><div>
+    <div class="src-name">${r.n}${r.ok===true?'<span class="src-ok ok">✓ En ligne</span>':r.ok===false?'<span class="src-ok nok">✗ Hors ligne</span>':''}</div>
+    <div class="src-desc">${r.d}</div><div class="src-upd">${r.u}</div>
+  </div></div>`).join('');
+}
+
+// ── Main ──
+let loading=false;
+async function loadAll(){
+  if(loading) return; loading=true;
+  const id=document.getElementById('spot-select').value;
+  const date=document.getElementById('dive-date').value;
+  const spot=SPOTS[id];
+  renderTags(spot); updateWindy(spot);
+  ['tide-content','weather-content','marine-content','vis-content'].forEach(e=>
+    document.getElementById(e).innerHTML='<div class="loading"><span class="spin"></span> Chargement…</div>');
+  document.getElementById('current-stats').innerHTML='';
+
+  const [tR,wR,mR]=await Promise.allSettled([
+    spot.tidal&&spot.rws?fetchTide(spot.rws,date):Promise.resolve([]),
+    fetchWeather(spot.lat,spot.lon,date),
+    fetchMarine(spot.lat,spot.lon,date),
+  ]);
+
+  let series=tR.status==='fulfilled'?tR.value:[];
+  const wx=wR.status==='fulfilled'?wR.value:null;
+  const marine=mR.status==='fulfilled'?mR.value:null;
+  const tideOk=series.length>0;
+
+  let extremes=detectExtremes(series);
+  if(!extremes.length&&spot.tidal){ extremes=fallbackTides(date); series=fallbackSeries(date,extremes); }
+
+  const corrected=renderTides(extremes,spot,date);
+  updateStatus(corrected,spot,date);
+  renderStats(series,spot,corrected);
+  renderWeather(wx,date);
+  renderMarine(marine,spot);
+  renderVis(spot,wx,marine);
+  drawGraph(series,corrected,date);
+  renderSources(tideOk,wx!==null,marine!==null&&!!marine.current);
+  loading=false;
+}
+
+function onSelChange(){ loadAll(); }
+loadAll();
+setInterval(()=>{ if(document.getElementById('dive-date').value===new Date().toISOString().split('T')[0]) loadAll(); },600000);
+</script>
+</body>
+</html>

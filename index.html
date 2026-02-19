@@ -159,6 +159,8 @@ canvas{width:100%;height:100%;display:block}
 
 /* Source button */
 .src-btn{display:inline-block;font-size:.65rem;font-weight:600;border:1px solid var(--border);border-radius:8px;padding:2px 8px;color:var(--accent);background:var(--accent-light);text-decoration:none;margin-left:6px;transition:background .15s}.src-btn:hover{background:#d0e8ff}
+/* Vis spot badge */
+#vis-spot-badge{margin-left:6px}
 
 /* Footer */
 footer{background:var(--white);border-top:1px solid var(--border);margin-top:8px}
@@ -244,6 +246,51 @@ footer{background:var(--white);border-top:1px solid var(--border);margin-top:8px
     </div>
   </div>
 
+  <!-- Filtre profil plongeur -->
+  <div class="sel-card">
+    <div class="sec-label">Mon profil de plongée</div>
+    <div class="sel-grid">
+      <div class="field">
+        <label>🎓 Niveau du plongeur</label>
+        <select id="diver-level" onchange="onFilterChange()">
+          <option value="beginner">Débutant (OWD / PA20)</option>
+          <option value="intermediate" selected>Intermédiaire (AOWD / PA40)</option>
+          <option value="experienced">Expérimenté (DM / Instructeur)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>📏 Profondeur max souhaitée</label>
+        <select id="max-depth" onchange="onFilterChange()">
+          <option value="12">Jusqu'à 12m</option>
+          <option value="20" selected>Jusqu'à 20m</option>
+          <option value="30">Jusqu'à 30m</option>
+          <option value="99">40m et plus</option>
+        </select>
+      </div>
+    </div>
+    <div id="filter-result" style="margin-top:12px"></div>
+  </div>
+
+  <!-- Visibilité -->
+  <div class="card">
+    <div class="card-hdr">
+      <span class="card-icon">👁️</span>
+      <span class="card-title">Visibilité & Conditions Sous-Marines</span>
+      <span id="vis-spot-badge" class="tag tag-blue"></span>
+      <span class="upd-badge" id="upd-vis">—</span>
+    </div>
+    <div id="vis-content"><div class="loading"><span class="spin"></span> Chargement…</div></div>
+  </div>
+
+  <!-- Indicateur de plongeabilité -->
+  <div id="status-banner" class="s-info">
+    <div class="st-icon" id="st-icon">⏳</div>
+    <div class="st-body">
+      <div class="st-title" id="st-title">Chargement des données…</div>
+      <div class="st-sub" id="st-sub">Connexion aux sources de données</div>
+    </div>
+  </div>
+
   <!-- Marées -->
   <div class="card">
     <div class="card-hdr">
@@ -288,25 +335,6 @@ footer{background:var(--white);border-top:1px solid var(--border);margin-top:8px
       <span class="upd-badge" id="upd-marine">—</span>
     </div>
     <div id="marine-content"><div class="loading"><span class="spin"></span> Chargement…</div></div>
-  </div>
-
-  <!-- Visibilité -->
-  <div class="card">
-    <div class="card-hdr">
-      <span class="card-icon">👁️</span>
-      <span class="card-title">Visibilité & Conditions Sous-Marines</span>
-      <span class="upd-badge" id="upd-vis">—</span>
-    </div>
-    <div id="vis-content"><div class="loading"><span class="spin"></span> Chargement…</div></div>
-  </div>
-
-  <!-- Status -->
-  <div id="status-banner" class="s-info">
-    <div class="st-icon" id="st-icon">⏳</div>
-    <div class="st-body">
-      <div class="st-title" id="st-title">Chargement des données…</div>
-      <div class="st-sub" id="st-sub">Connexion aux sources de données</div>
-    </div>
   </div>
 
   <!-- Windy -->
@@ -360,7 +388,7 @@ const SPOTS = {
   zoetersbout:   {fr:"Zoetersbout",zone:"Oosterschelde",rws:"STAVNS",corrHW:0,corrLW:0,tidal:false,expert:false,noFlow:true,depth:22,vis:[4,10],lat:51.637,lon:3.997,desc:"Bras mort sans courant. Idéal débutants. Seiches fréquentes."},
   bergse:        {fr:"Bergse Diepsluis — Écluse Bergse",zone:"Oosterschelde",rws:"STAVNS",corrHW:0,corrLW:0,tidal:false,expert:false,noFlow:true,depth:18,vis:[4,10],lat:51.573,lon:4.073,desc:"Sans courant. Site de référence pour seiches (dès 12°C)."},
   stavenisse:    {fr:"Stavenisse — Port",zone:"Oosterschelde",rws:"STAVNS",corrHW:0,corrLW:0,tidal:true,expert:false,noFlow:false,depth:15,vis:[3,8],lat:51.598,lon:4.010,desc:"Station de référence Oosterschelde. Port avec faune riche."},
-  sint_annaland: {fr:"Sint Annaland — Plage",zone:"Oosterschelde",rws:"STAVNS",corrHW:40,corrLW:50,tidal:true,expert:false,noFlow:false,depth:15,vis:[3,7],lat:51.630,lon:4.132,desc:"Kentering décalée. Plage sableuse, vie variée."},
+  sint_annaland: {fr:"Sint Annaland — Plage",zone:"Oosterschelde",rws:"STAVNS",corrHW:40,corrLW:50,tidal:true,expert:false,noFlow:false,depth:15,vis:[3,7],lat:51.630,lon:4.132,desc:"Étale décalée. Plage sableuse, vie variée."},
   gorishoek:     {fr:"Gorishoek",zone:"Oosterschelde",rws:"STAVNS",corrHW:-15,corrLW:-18,tidal:true,expert:false,noFlow:false,depth:20,vis:[4,9],lat:51.605,lon:3.978,desc:"Site populaire avec vulstation. Riche biodiversité."},
   katshoek:      {fr:"Katshoek",zone:"Oosterschelde",rws:"STAVNS",corrHW:20,corrLW:15,tidal:true,expert:false,noFlow:false,depth:22,vis:[3,8],lat:51.575,lon:3.909,desc:"Station automatique WAC. Fond de blocs."},
   kattendijke:   {fr:"Kattendijke",zone:"Oosterschelde",rws:"STAVNS",corrHW:25,corrLW:20,tidal:true,expert:false,noFlow:false,depth:18,vis:[3,8],lat:51.571,lon:3.942,desc:"Zone calme au nord de l'Oosterschelde."},
@@ -536,8 +564,8 @@ function renderTides(extremes,spot,dateStr){
     if(isToday){
       const inW=corrected.find(e=>now>=e.win.from&&now<=e.win.to);
       const next=corrected.find(e=>e.win.from>now);
-      if(inW) html+=`<div class="kt-hero green"><div class="kh-lbl">🟢 Fenêtre en cours</div><div class="kh-time">${fmtT(inW.win.from)} — ${fmtT(inW.win.to)}</div><div class="kh-win">Kentering à ${fmtT(inW.win.kt)} · Plongez maintenant !</div></div>`;
-      else if(next){ const m=Math.round((next.win.from-now)/60000); html+=`<div class="kt-hero orange"><div class="kh-lbl">⏱ Prochaine fenêtre dans ${m<60?m+' min':Math.floor(m/60)+'h'+p2(m%60)}</div><div class="kh-time">${fmtT(next.win.from)} — ${fmtT(next.win.to)}</div><div class="kh-win">Kentering à ${fmtT(next.win.kt)}</div></div>`; }
+      if(inW) html+=`<div class="kt-hero green"><div class="kh-lbl">🟢 Fenêtre en cours</div><div class="kh-time">${fmtT(inW.win.from)} — ${fmtT(inW.win.to)}</div><div class="kh-win">Étale à ${fmtT(inW.win.kt)} · Plongez maintenant !</div></div>`;
+      else if(next){ const m=Math.round((next.win.from-now)/60000); html+=`<div class="kt-hero orange"><div class="kh-lbl">⏱ Prochaine fenêtre dans ${m<60?m+' min':Math.floor(m/60)+'h'+p2(m%60)}</div><div class="kh-time">${fmtT(next.win.from)} — ${fmtT(next.win.to)}</div><div class="kh-win">Étale à ${fmtT(next.win.kt)}</div></div>`; }
     }
     corrected.forEach(e=>{
       const past=isToday&&e.win.to<now, inW=isToday&&now>=e.win.from&&now<=e.win.to;
@@ -550,6 +578,7 @@ function renderTides(extremes,spot,dateStr){
         <div class="dw-row">
           <span class="dw-lbl">Plonger :</span>
           <span class="dw-pill ${inW?'dw-now':past?'dw-past':'dw-ok'}">${fmtT(e.win.from)} → ${fmtT(e.win.to)}</span>
+          <span style="font-size:.68rem;color:var(--muted)">Étale : ${fmtT(e.win.kt)}</span>
         </div>
         ${e.corr!==0?`<div class="corr-note">Correction NOB ${e.corr>0?'+':''}${e.corr} min vs Stavenisse · Sources : duikspotter.nl, sovscaldis.nl</div>`:''}
       </div>`;
@@ -641,9 +670,52 @@ function renderMarine(data,spot){
   document.getElementById('upd-marine').textContent=`Mis à jour ${now_ts()}`;
 }
 
+// ── Spot level helper ──
+function spotLevel(spot){
+  if(spot.expert) return 'experienced';
+  if(spot.noFlow && spot.depth<=18) return 'beginner';
+  return 'intermediate';
+}
+
+// ── Filter ──
+function renderFilter(spot){
+  const level=document.getElementById('diver-level').value;
+  const maxD=parseInt(document.getElementById('max-depth').value);
+  const el=document.getElementById('filter-result');
+  if(!el) return;
+  const sLevel=spotLevel(spot);
+  const rank={beginner:0,intermediate:1,experienced:2};
+  const diverRank=rank[level], siteRank=rank[sLevel];
+  const levelNames={beginner:'Débutant',intermediate:'Intermédiaire',experienced:'Expérimenté'};
+  let html='';
+  // Compatibilité niveau
+  if(diverRank>=siteRank){
+    html+=`<div class="alert a-green">✅ <strong>${spot.fr}</strong> est adapté à votre niveau <strong>(${levelNames[sLevel]})</strong>.</div>`;
+  } else {
+    html+=`<div class="alert a-red">⚠️ <strong>${spot.fr}</strong> est classé <strong>${levelNames[sLevel]}</strong> — ce site dépasse votre niveau actuel.</div>`;
+  }
+  // Profondeur
+  if(spot.depth>maxD){
+    html+=`<div class="alert a-yellow">📏 Ce site descend jusqu'à <strong>${spot.depth}m</strong> — dépasse votre profondeur souhaitée (${maxD}m). Limitez votre plongée en conséquence.</div>`;
+  }
+  // Nb de sites compatibles
+  const matching=Object.values(SPOTS).filter(s=>rank[spotLevel(s)]<=diverRank&&s.depth<=maxD);
+  const total=Object.keys(SPOTS).length;
+  html+=`<div style="font-size:.72rem;color:var(--muted);margin-top:6px">💡 <strong>${matching.length}</strong> sites sur ${total} correspondent à votre profil — modifiez les filtres pour explorer.</div>`;
+  el.innerHTML=html;
+}
+
+function onFilterChange(){
+  const id=document.getElementById('spot-select').value;
+  renderFilter(SPOTS[id]);
+}
+
 // ── Render Visibility ──
 function renderVis(spot,weather,marine){
   const el=document.getElementById('vis-content');
+  // Update spot name badge
+  const badge=document.getElementById('vis-spot-badge');
+  if(badge) badge.textContent=spot.fr;
   const m=new Date().getMonth();
   let uw=spot.zone==='Grevelingenmeer'?9:spot.zone==='Veerse Meer'?7:spot.zone==='Westerschelde'?2:5;
   if(m>=2&&m<=4) uw+=2; if(m>=6&&m<=8) uw+=1; if(m>=11||m<=1) uw-=1;
@@ -685,8 +757,8 @@ function updateStatus(corrected,spot,dateStr){
   const next=corrected.find(e=>e.win.from>now);
   if(inW){ b.className='s-green'; ic.textContent='🟢'; ti.textContent='Conditions optimales — Plongez maintenant !'; su.textContent=`Fin de fenêtre : ${fmtT(inW.win.to)} · ${spot.fr}`; }
   else if(next){ const m=Math.round((next.win.from-now)/60000);
-    if(m<=45){ b.className='s-yellow'; ic.textContent='🟡'; ti.textContent=`Préparez-vous — kentering dans ${m} min`; su.textContent=`Fenêtre : ${fmtT(next.win.from)} → ${fmtT(next.win.to)}`; }
-    else { b.className='s-red'; ic.textContent='🔴'; ti.textContent='Courant trop fort — attendez la kentering'; su.textContent=`Prochaine fenêtre : ${fmtT(next.win.from)} (dans ${Math.floor(m/60)}h${p2(m%60)})`; }
+    if(m<=45){ b.className='s-yellow'; ic.textContent='🟡'; ti.textContent=`Préparez-vous — étale dans ${m} min`; su.textContent=`Fenêtre : ${fmtT(next.win.from)} → ${fmtT(next.win.to)}`; }
+    else { b.className='s-red'; ic.textContent='🔴'; ti.textContent="Courant trop fort — attendez l'étale"; su.textContent=`Prochaine fenêtre : ${fmtT(next.win.from)} (dans ${Math.floor(m/60)}h${p2(m%60)})`; }
   } else { b.className='s-red'; ic.textContent='🔴'; ti.textContent="Aucune fenêtre disponible aujourd'hui"; su.textContent=spot.fr; }
 }
 
@@ -695,7 +767,7 @@ function renderTags(spot){
   const z={Oosterschelde:'tag-blue',Grevelingenmeer:'tag-green',Westerschelde:'tag-red','Veerse Meer':'tag-blue'}[spot.zone]||'tag-gray';
   document.getElementById('spot-tags').innerHTML=[
     `<span class="tag ${z}">${spot.zone}</span>`,
-    spot.noFlow?`<span class="tag tag-green">Sans marée ✓</span>`:`<span class="tag tag-gray">Marées · Kentering</span>`,
+    spot.noFlow?`<span class="tag tag-green">Sans marée ✓</span>`:`<span class="tag tag-gray">Marées · Étale</span>`,
     `<span class="tag tag-gray">Max ${spot.depth}m</span>`,
     `<span class="tag tag-gray">Zicht ${spot.vis[0]}–${spot.vis[1]}m</span>`,
     spot.expert?`<span class="tag tag-red">⚠️ Experts</span>`:'',
@@ -733,7 +805,7 @@ async function loadAll(){
   const id=document.getElementById('spot-select').value;
   const date=document.getElementById('dive-date').value;
   const spot=SPOTS[id];
-  renderTags(spot); updateWindy(spot);
+  renderTags(spot); updateWindy(spot); renderFilter(spot);
   ['tide-content','weather-content','marine-content','vis-content'].forEach(e=>
     document.getElementById(e).innerHTML='<div class="loading"><span class="spin"></span> Chargement…</div>');
   document.getElementById('current-stats').innerHTML='';

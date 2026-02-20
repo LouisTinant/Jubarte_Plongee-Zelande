@@ -215,6 +215,9 @@ footer{background:var(--white);border-top:1px solid var(--border);margin-top:8px
             <option value="schelphoek">Schelphoek</option>
             <option value="roompot">Roompot</option>
             <option value="neeltje_jans">Neeltje Jans</option>
+            <option value="zierikzee">Zierikzee</option>
+            <option value="colijnsplaat">Colijnsplaat</option>
+            <option value="yerseke">Yerseke</option>
           </optgroup>
           <optgroup label="🏞️ Grevelingenmeer (sans marée)">
             <option value="nieuwe_kerkweg">Nieuwe Kerkweg - Den Osse</option>
@@ -230,11 +233,15 @@ footer{background:var(--white);border-top:1px solid var(--border);margin-top:8px
             <option value="geersdijk">Geersdijk</option>
             <option value="oranjeplaat">Oranjeplaat</option>
             <option value="veerse_dam">Veerse Dam</option>
+            <option value="kats">Kats</option>
           </optgroup>
           <optgroup label="⚠️ Westerschelde (experts)">
             <option value="vlissingen">Vlissingen</option>
             <option value="terneuzen">Terneuzen</option>
             <option value="wrak_ketel">Épave de Ketel</option>
+            <option value="westkapelle">Westkapelle</option>
+            <option value="hansweert">Hansweert</option>
+            <option value="walsoorden">Walsoorden</option>
           </optgroup>
         </select>
         <div class="spot-meta" id="spot-tags"></div>
@@ -253,18 +260,18 @@ footer{background:var(--white);border-top:1px solid var(--border);margin-top:8px
       <div class="field">
         <label>🎓 Mon niveau</label>
         <select id="diver-level" onchange="onFilterChange()">
-          <option value="NB">NB — Non Breveté</option>
-          <option value="1star">1* — Plongeur Encadré</option>
-          <option value="2star" selected>2* — Plongeur Autonome</option>
-          <option value="3star">3* — Plongeur Confirmé</option>
-          <option value="4star">4* — Plongeur Expert</option>
-          <option value="AM">AM / MC / MF / MN — Moniteur</option>
+          <option value="NB">NB - Non Breveté</option>
+          <option value="1star">1* - Plongeur Encadré</option>
+          <option value="2star" selected>2* - Plongeur Autonome</option>
+          <option value="3star">3* - Plongeur Confirmé</option>
+          <option value="4star">4* - Plongeur Expert</option>
+          <option value="AM">AM / MC / MF / MN - Moniteur</option>
         </select>
       </div>
       <div class="field">
         <label>🤿 Niveau du binôme</label>
         <select id="buddy-level" onchange="onFilterChange()">
-          <option value="NB">NB — Non Breveté</option>
+          <option value="NB">NB - Non Breveté</option>
           <option value="1star">1*</option>
           <option value="2star">2*</option>
           <option value="3star" selected>3*</option>
@@ -342,6 +349,15 @@ footer{background:var(--white);border-top:1px solid var(--border);margin-top:8px
     <div id="marine-content"><div class="loading"><span class="spin"></span> Chargement…</div></div>
   </div>
 
+  <!-- Lune -->
+  <div class="card">
+    <div class="card-hdr">
+      <span class="card-icon">🌙</span>
+      <span class="card-title">Phase de Lune & Marées de Vive-Eau</span>
+    </div>
+    <div id="moon-content"></div>
+  </div>
+
   <!-- Windy -->
   <div class="card">
     <div class="card-hdr">
@@ -371,7 +387,7 @@ footer{background:var(--white);border-top:1px solid var(--border);margin-top:8px
       <span class="footer-emoji">🤿</span>
       <div>
         <div class="footer-name">Louis TINANT</div>
-        <div class="footer-club">Plongeur 3⭐ &nbsp;·&nbsp; Club <strong>JUBARTE C.A.S. HABAY</strong></div>
+        <div class="footer-club">Plongeur 2⭐ &nbsp;·&nbsp; Club <strong>JUBARTE C.A.S. HABAY</strong></div>
       </div>
     </div>
     <div class="footer-right">
@@ -414,6 +430,13 @@ const SPOTS = {
   vlissingen:    {fr:"Vlissingen",zone:"Westerschelde",rws:"VLISSGN",corrHW:0,corrLW:0,tidal:true,expert:true,noFlow:false,depth:15,vis:[1,4],lat:51.443,lon:3.572,desc:"Forts courants et trafic maritime. Experts uniquement."},
   terneuzen:     {fr:"Terneuzen",zone:"Westerschelde",rws:"TERNZN",corrHW:0,corrLW:0,tidal:true,expert:true,noFlow:false,depth:15,vis:[1,3],lat:51.333,lon:3.830,desc:"Zone portuaire. Forts courants. Accès réglementé."},
   wrak_ketel:    {fr:"Épave de Ketel",zone:"Westerschelde",rws:"VLISSGN",corrHW:0,corrLW:0,tidal:true,expert:true,noFlow:false,depth:22,vis:[1,5],lat:51.380,lon:3.690,desc:"Épave connue. Boot-diving uniquement. Expérimentés."},
+  westkapelle:   {fr:"Westkapelle",zone:"Westerschelde",rws:"VLISSGN",corrHW:-5,corrLW:-8,tidal:true,expert:true,noFlow:false,depth:15,vis:[2,6],lat:51.527,lon:3.441,desc:"Côte nord de Walcheren, Mer du Nord. Site très exposé, courants côtiers forts. Boot-diving. Experts uniquement."},
+  hansweert:     {fr:"Hansweert",zone:"Westerschelde",rws:"VLISSGN",corrHW:+45,corrLW:+40,tidal:true,expert:true,noFlow:false,depth:15,vis:[1,4],lat:51.443,lon:4.003,desc:"Westerschelde, canal de Hansweert. Forts courants, trafic maritime dense. Experts uniquement."},
+  walsoorden:    {fr:"Walsoorden",zone:"Westerschelde",rws:"VLISSGN",corrHW:+55,corrLW:+50,tidal:true,expert:true,noFlow:false,depth:15,vis:[1,4],lat:51.381,lon:4.032,desc:"Westerschelde. Courants très forts. Accès réglementé. Experts uniquement."},
+  zierikzee:     {fr:"Zierikzee",zone:"Oosterschelde",rws:"STAVNS",corrHW:-20,corrLW:-22,tidal:true,expert:false,noFlow:false,depth:12,vis:[3,8],lat:51.650,lon:3.923,desc:"Port historique de Schouwen-Duiveland. Site accessible, vie marine variée."},
+  colijnsplaat:  {fr:"Colijnsplaat",zone:"Oosterschelde",rws:"STAVNS",corrHW:+10,corrLW:+12,tidal:true,expert:false,noFlow:false,depth:15,vis:[3,8],lat:51.601,lon:3.855,desc:"Noord-Beveland, face à l'Oosterschelde. Digue et fond sableux, vie marine diversifiée."},
+  yerseke:       {fr:"Yerseke",zone:"Oosterschelde",rws:"STAVNS",corrHW:+22,corrLW:+28,tidal:true,expert:false,noFlow:false,depth:15,vis:[3,8],lat:51.489,lon:4.055,desc:"Port ostréicole sur l'Oosterschelde. Parcs à huîtres, éponges, faune typique."},
+  kats:          {fr:"Kats",zone:"Veerse Meer",rws:null,corrHW:0,corrLW:0,tidal:false,expert:false,noFlow:true,depth:12,vis:[4,10],lat:51.547,lon:3.764,desc:"Écluse de Kats sur Noord-Beveland. Côté Veerse Meer, sans courant. Site calme, bon pour débutants."},
 };
 
 const RWS_MAP = {STAVNS:"STAVNS",BRKDMDN:"BRKDMDN",VLISSGN:"VLISSGN",TERNZN:"TERNZN"};
@@ -798,6 +821,47 @@ function renderTags(spot){
   ].join('');
 }
 
+// ── Moon ──
+function moonInfo(){
+  const knownNew=new Date('2000-01-06T18:14:00Z');
+  const cycle=29.53059;
+  const elapsed=(new Date()-knownNew)/86400000;
+  const age=((elapsed%cycle)+cycle)%cycle;
+  const frac=age/cycle;
+  let phase,emoji;
+  if(frac<0.033||frac>=0.967){phase='Nouvelle lune';emoji='🌑';}
+  else if(frac<0.22){phase='Premier croissant';emoji='🌒';}
+  else if(frac<0.28){phase='Premier quartier';emoji='🌓';}
+  else if(frac<0.467){phase='Gibbeuse croissante';emoji='🌔';}
+  else if(frac<0.533){phase='Pleine lune';emoji='🌕';}
+  else if(frac<0.70){phase='Gibbeuse décroissante';emoji='🌖';}
+  else if(frac<0.78){phase='Dernier quartier';emoji='🌗';}
+  else{phase='Dernier croissant';emoji='🌘';}
+  const distSpring=Math.min(frac,1-frac,Math.abs(frac-0.5));
+  const tideType=distSpring<0.10?'Vives-eaux':distSpring<0.22?'Transition':'Mortes-eaux';
+  const tideColor=distSpring<0.10?'var(--red)':distSpring<0.22?'var(--yellow)':'var(--green)';
+  const daysToFull=frac<0.5?(0.5-frac)*cycle:(1.5-frac)*cycle;
+  const daysToNew=(1-frac)*cycle;
+  return{phase,emoji,tideType,tideColor,age:age.toFixed(1),daysToFull:Math.round(daysToFull),daysToNew:Math.round(daysToNew)};
+}
+function renderMoon(){
+  const {phase,emoji,tideType,tideColor,age,daysToFull,daysToNew}=moonInfo();
+  document.getElementById('moon-content').innerHTML=`
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px">
+      <div style="font-size:3rem;line-height:1">${emoji}</div>
+      <div>
+        <div style="font-size:1.08rem;font-weight:700">${phase}</div>
+        <div style="font-size:.75rem;color:var(--muted);margin-top:3px">Jour ${age} / 29.5 du cycle lunaire</div>
+      </div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-box"><div class="stat-val" style="color:${tideColor};font-size:.98rem">${tideType}</div><div class="stat-lbl">⚓ Régime de marée</div><div class="stat-sub">Influence sur les courants</div></div>
+      <div class="stat-box"><div class="stat-val">${daysToFull === 0 ? 'Aujourd\'hui' : daysToFull+'j'}</div><div class="stat-lbl">🌕 Prochaine pleine lune</div></div>
+      <div class="stat-box"><div class="stat-val">${daysToNew === 0 ? 'Aujourd\'hui' : daysToNew+'j'}</div><div class="stat-lbl">🌑 Prochaine nouvelle lune</div></div>
+    </div>
+    <div class="alert a-blue" style="margin-top:10px">🔭 <strong>Vives-eaux</strong> (±2j pleine/nouvelle lune) : marnage amplifié, courants plus forts, fenêtres d'étale plus courtes. <strong>Mortes-eaux</strong> (quartiers) : courants réduits, étales plus longues et confortables pour plonger.</div>`;
+}
+
 // ── Windy ──
 function updateWindy(spot){
   const iframe=document.getElementById('windy-iframe');
@@ -829,7 +893,7 @@ async function loadAll(){
   const id=document.getElementById('spot-select').value;
   const date=document.getElementById('dive-date').value;
   const spot=SPOTS[id];
-  renderTags(spot); updateWindy(spot); renderFilter(spot);
+  renderTags(spot); updateWindy(spot); renderFilter(spot); renderMoon();
   ['tide-content','weather-content','marine-content','vis-content'].forEach(e=>
     document.getElementById(e).innerHTML='<div class="loading"><span class="spin"></span> Chargement…</div>');
   document.getElementById('current-stats').innerHTML='';

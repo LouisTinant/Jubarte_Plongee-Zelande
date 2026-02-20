@@ -56,17 +56,35 @@ Estuaire actif menant au port d'Anvers. **Courants extrêmement violents** (4–
 - Planification sur **7 jours** (aujourd'hui + 6 jours)
 - Pour chaque site : affichage des métadonnées clés (zone, profondeur max, fourchette de visibilité typique, statut marée/sans-marée, niveau requis)
 
-### 2. Filtre profil plongeur
+### 2. Filtre profil plongeur - matrice LIFRAS
 
-Deux paramètres permettent de filtrer les sites selon le plongeur :
+L'application utilise les **brevets LIFRAS** (Ligue Francophone de Recherches et d'Activités Subaquatiques). Deux sélecteurs sont proposés : le niveau du plongeur et le niveau du binôme. La combinaison détermine la profondeur maximale autorisée selon la règlementation LIFRAS.
 
-| Niveau | Équivalents |
+#### Niveaux disponibles
+
+| Code | Désignation |
 |---|---|
-| Débutant | OWD / PA20 |
-| Intermédiaire | AOWD / PA40 |
-| Expérimenté | DM / Instructeur |
+| NB | Non Breveté |
+| 1* | Plongeur Encadré |
+| 2* | Plongeur Autonome |
+| 3* | Plongeur Confirmé |
+| 4* | Plongeur Expert |
+| AM / MC / MF / MN | Assistant Moniteur / Moniteur Club, Fédéral ou National |
 
-Le filtre **profondeur maximale** (12m / 20m / 30m / 40m+) complète le niveau. L'application indique en temps réel combien de sites du catalogue correspondent au profil, et signale les incompatibilités entre le site sélectionné et le plongeur.
+#### Matrice des profondeurs autorisées (binôme)
+
+| Plongeur \ Binôme | NB | 1* | 2* | 3* | 4* | AM/Moniteur |
+|---|---|---|---|---|---|---|
+| **NB** | - | - | - | - | - | 15 m |
+| **1*** | - | - | - | 20 m | 20 m | 20 m |
+| **2*** | - | - | 20 m (\*) | 30 m | 40 m | 40 m |
+| **3*** | - | 20 m | 30 m | 40 m | 40 m | 40 m |
+| **4*** | - | 20 m | 40 m | 40 m | 40 m | >40 m |
+| **AM/Moniteur** | 15 m | 20 m | 40 m | 40 m | 40 m | >40 m |
+
+(\*) 2* + 2* : uniquement si les deux plongeurs ont **18 ans révolus**. Jamais au-delà de 20 m.
+
+L'application détecte les combinaisons non autorisées (cellules "-") et affiche une alerte bloquante. Elle indique également combien de sites du catalogue sont accessibles pour la combinaison sélectionnée.
 
 ### 3. Bannière de statut - décision immédiate
 

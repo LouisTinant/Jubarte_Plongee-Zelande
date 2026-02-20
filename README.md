@@ -1,6 +1,6 @@
 # Jubarte Plongée Zélande
 
-Application web d'aide à la planification de plongées en Zélande (Pays-Bas), développée par **Louis TINANT** (plongeur 3⭐) pour les membres du club **JUBARTE C.A.S. HABAY**.
+Application web d'aide à la planification de plongées en Zélande (Pays-Bas), développée par **Louis TINANT** (plongeur 2⭐) pour les membres du club **JUBARTE C.A.S. HABAY**.
 
 ---
 

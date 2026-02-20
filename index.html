@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Plongée Zélande</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -251,6 +253,7 @@ footer{background:var(--white);border-top:1px solid var(--border);margin-top:8px
         <input type="date" id="dive-date" onchange="onSelChange()">
       </div>
     </div>
+    <div id="spots-map" style="height:280px;border-radius:14px;overflow:hidden;margin-top:14px;border:1.5px solid var(--border)"></div>
   </div>
 
   <!-- Filtre profil plongeur -->
@@ -821,6 +824,42 @@ function renderTags(spot){
   ].join('');
 }
 
+// ── Spots Map ──
+let spotsMap=null, spotsMarkers={};
+const ZONE_COLORS={'Oosterschelde':'#0071e3','Grevelingenmeer':'#28a745','Veerse Meer':'#0ea5e9','Westerschelde':'#d70015'};
+function initSpotsMap(){
+  if(spotsMap) return;
+  spotsMap=L.map('spots-map',{zoomControl:true,attributionControl:true}).setView([51.64,3.85],10);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',maxZoom:18
+  }).addTo(spotsMap);
+  Object.entries(SPOTS).forEach(([id,spot])=>{
+    const col=ZONE_COLORS[spot.zone]||'#888';
+    const m=L.circleMarker([spot.lat,spot.lon],{
+      radius:spot.expert?9:7,fillColor:col,color:spot.expert?'#7a0010':col,
+      weight:spot.expert?2.5:1.5,opacity:1,fillOpacity:0.85
+    }).addTo(spotsMap);
+    m.bindPopup(`<div style="min-width:160px;font-family:-apple-system,sans-serif">
+      <div style="font-weight:700;font-size:.88rem;margin-bottom:4px">${spot.fr}</div>
+      <div style="font-size:.75rem;color:${col};font-weight:600;margin-bottom:6px">${spot.zone}</div>
+      <div style="font-size:.72rem;color:#555">Max ${spot.depth}m &nbsp;·&nbsp; Zicht ${spot.vis[0]}-${spot.vis[1]}m</div>
+      <div style="font-size:.72rem;color:#555;margin-top:2px">${spot.noFlow?'✓ Sans courant':'~ Marées · étale'}</div>
+      ${spot.expert?'<div style="font-size:.72rem;color:#d70015;margin-top:4px;font-weight:600">⚠️ Experts uniquement</div>':''}
+    </div>`);
+    m.on('click',()=>{
+      document.getElementById('spot-select').value=id;
+      onSelChange();
+    });
+    spotsMarkers[id]=m;
+  });
+}
+function updateSpotsMap(id){
+  if(!spotsMap) return;
+  const spot=SPOTS[id]; if(!spot) return;
+  spotsMap.flyTo([spot.lat,spot.lon],13,{duration:.8});
+  if(spotsMarkers[id]) setTimeout(()=>spotsMarkers[id].openPopup(),900);
+}
+
 // ── Moon ──
 function moonInfo(){
   const knownNew=new Date('2000-01-06T18:14:00Z');
@@ -880,6 +919,7 @@ function renderSources(tideOk,wxOk,marineOk){
     {c:'#0ea5e9',n:'Open-Meteo Marine',d:'Hauteur vagues, période, direction, houle · Modèle ERA5',u:`Résolution horaire · Récupéré à ${ts}`,ok:marineOk,url:'https://marine-api.open-meteo.com'},
     {c:'#7c3aed',n:'Windy.com',d:'Carte météo interactive en temps réel · Modèle ECMWF',u:'Mise à jour continue (iframe live)',ok:true,url:'https://www.windy.com'},
     {c:'#f5a623',n:'NOB - Nederlandse Onderwatersport Bond',d:'Corrections kentering par site · Croisées : duikspotter.nl, sovscaldis.nl, duikersgids.nl',u:'Données empiriques, vérifiées 2025. Tolérance ±15 min selon conditions.',ok:null,url:'https://www.duiken.nl'},
+    {c:'#7a5af8',n:'Calcul astronomique local - Phase de Lune',d:'Cycle synodique lunaire (29,53059j) · Point de référence : nouvelle lune du 6 janvier 2000 à 18h14 UTC (US Naval Observatory) · Précision ±1 jour',u:'Calcul client, aucune API — toujours disponible',ok:true,url:'https://aa.usno.navy.mil/data/MoonPhase'},
   ].map(r=>`<div class="src-row"><div class="src-dot" style="background:${r.c}"></div><div style="flex:1">
     <div class="src-name">${r.n}${r.ok===true?'<span class="src-ok ok">✓ En ligne</span>':r.ok===false?'<span class="src-ok nok">✗ Hors ligne</span>':''}${r.url?`<a href="${r.url}" target="_blank" rel="noopener" class="src-btn">↗ Accéder</a>`:''}</div>
     <div class="src-desc">${r.d}</div><div class="src-upd">${r.u}</div>
@@ -893,7 +933,7 @@ async function loadAll(){
   const id=document.getElementById('spot-select').value;
   const date=document.getElementById('dive-date').value;
   const spot=SPOTS[id];
-  renderTags(spot); updateWindy(spot); renderFilter(spot); renderMoon();
+  renderTags(spot); updateWindy(spot); renderFilter(spot); renderMoon(); updateSpotsMap(id);
   ['tide-content','weather-content','marine-content','vis-content'].forEach(e=>
     document.getElementById(e).innerHTML='<div class="loading"><span class="spin"></span> Chargement…</div>');
   document.getElementById('current-stats').innerHTML='';
@@ -924,6 +964,7 @@ async function loadAll(){
 }
 
 function onSelChange(){ loadAll(); }
+initSpotsMap();
 loadAll();
 setInterval(()=>{ if(document.getElementById('dive-date').value===new Date().toISOString().split('T')[0]) loadAll(); },600000);
 </script>

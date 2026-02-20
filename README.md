@@ -35,7 +35,7 @@ Exemple : sur l'Oosterschelde, la pleine mer à Sint Annaland arrive **+40 minut
 ## Les 4 zones de plongée couvertes
 
 ### Oosterschelde - Bras de mer à marées
-Le plus grand estuaire de Zélande, séparé de la Mer du Nord par le barrage anti-tempête de la Delta Works. **Soumis aux marées** (marnage 2–3m), courants significatifs, mais biodiversité exceptionnelle. La majorité des 31 sites de l'application s'y trouvent. Quelques zones de calme existent (Zoetersbout, Bergse Diepsluis) où le courant est négligeable.
+Le plus grand estuaire de Zélande, séparé de la Mer du Nord par le barrage anti-tempête de la Delta Works. **Soumis aux marées** (marnage 2–3m), courants significatifs, mais biodiversité exceptionnelle. La majorité des 37 sites de l'application s'y trouvent. Quelques zones de calme existent (Zoetersbout, Bergse Diepsluis) où le courant est négligeable.
 
 ### Grevelingenmeer - Lac fermé, sans marée
 Ancien bras de mer transformé en lac d'eau salée après les Delta Works (1971). **Aucun courant de marée.** Eau très claire (visibilité 5–15m), faune dense. Sites accessibles à tout moment, idéaux pour les plongeurs moins expérimentés ou souhaitant une plongée longue sans contrainte horaire.
@@ -52,7 +52,7 @@ Estuaire actif menant au port d'Anvers. **Courants extrêmement violents** (4–
 
 ### 1. Sélection du site et de la date
 
-- **31 sites** répartis sur les 4 zones, groupés par zone dans le sélecteur
+- **37 sites** répartis sur les 4 zones, groupés par zone dans le sélecteur
 - Planification sur **7 jours** (aujourd'hui + 6 jours)
 - Pour chaque site : affichage des métadonnées clés (zone, profondeur max, fourchette de visibilité typique, statut marée/sans-marée, niveau requis)
 
@@ -157,7 +157,7 @@ Un panneau de transparence liste toutes les sources de données avec :
 
 ---
 
-## Base de données des 31 sites
+## Base de données des 37 sites
 
 Chaque site est décrit par :
 

@@ -417,7 +417,7 @@ const SPOTS = {
   katshoek:      {fr:"Katshoek",zone:"Oosterschelde",rws:"STAVNS",corrHW:20,corrLW:15,tidal:true,expert:false,noFlow:false,depth:22,vis:[3,8],lat:51.575,lon:3.909,desc:"Station automatique WAC. Fond de blocs."},
   kattendijke:   {fr:"Kattendijke",zone:"Oosterschelde",rws:"STAVNS",corrHW:25,corrLW:20,tidal:true,expert:false,noFlow:false,depth:18,vis:[3,8],lat:51.571,lon:3.942,desc:"Zone calme au nord de l'Oosterschelde."},
   schelphoek:    {fr:"Schelphoek",zone:"Oosterschelde",rws:"STAVNS",corrHW:-10,corrLW:-12,tidal:true,expert:false,noFlow:false,depth:25,vis:[3,9],lat:51.656,lon:3.837,desc:"Blocs rocheux impressionnants. Homards et congres."},
-  roompot:       {fr:"Roompot",zone:"Oosterschelde",rws:"STAVNS",corrHW:-40,corrLW:-30,tidal:true,expert:true,noFlow:false,depth:20,vis:[3,7],lat:51.625,lon:3.698,desc:"Proche du barrage anti-tempête. Courants puissants."},
+  roompot:       {fr:"Roompot",zone:"Oosterschelde",rws:"STAVNS",corrHW:-40,corrLW:-30,tidal:true,expert:true,noFlow:false,depth:25,vis:[3,7],lat:51.625,lon:3.698,desc:"Proche du barrage anti-tempête. Courants puissants."},
   neeltje_jans:  {fr:"Neeltje Jans",zone:"Oosterschelde",rws:"STAVNS",corrHW:-45,corrLW:-35,tidal:true,expert:true,noFlow:false,depth:18,vis:[3,8],lat:51.626,lon:3.718,desc:"Vue sur la Stormvloedkering. Courant fort."},
   nieuwe_kerkweg:{fr:"Nieuwe Kerkweg - Den Osse",zone:"Grevelingenmeer",rws:"BRKDMDN",corrHW:0,corrLW:0,tidal:false,expert:false,noFlow:true,depth:30,vis:[5,14],lat:51.741,lon:3.955,desc:"Site très populaire. Plaques béton colonisées, anguilles, anémones."},
   scharendijke:  {fr:"Scharendijke Ouest",zone:"Grevelingenmeer",rws:"BRKDMDN",corrHW:0,corrLW:0,tidal:false,expert:false,noFlow:true,depth:24,vis:[5,12],lat:51.742,lon:3.878,desc:"Reefballs depuis 2001. Épave Le Serpent à 23m."},
@@ -433,7 +433,7 @@ const SPOTS = {
   vlissingen:    {fr:"Vlissingen",zone:"Westerschelde",rws:"VLISSGN",corrHW:0,corrLW:0,tidal:true,expert:true,noFlow:false,depth:15,vis:[1,4],lat:51.443,lon:3.572,desc:"Forts courants et trafic maritime. Experts uniquement."},
   terneuzen:     {fr:"Terneuzen",zone:"Westerschelde",rws:"TERNZN",corrHW:0,corrLW:0,tidal:true,expert:true,noFlow:false,depth:15,vis:[1,3],lat:51.333,lon:3.830,desc:"Zone portuaire. Forts courants. Accès réglementé."},
   wrak_ketel:    {fr:"Épave de Ketel",zone:"Westerschelde",rws:"VLISSGN",corrHW:0,corrLW:0,tidal:true,expert:true,noFlow:false,depth:22,vis:[1,5],lat:51.380,lon:3.690,desc:"Épave connue. Boot-diving uniquement. Expérimentés."},
-  westkapelle:   {fr:"Westkapelle",zone:"Westerschelde",rws:"VLISSGN",corrHW:-5,corrLW:-8,tidal:true,expert:true,noFlow:false,depth:15,vis:[2,6],lat:51.527,lon:3.441,desc:"Côte nord de Walcheren, Mer du Nord. Site très exposé, courants côtiers forts. Boot-diving. Experts uniquement."},
+  westkapelle:   {fr:"Westkapelle",zone:"Westerschelde",rws:"VLISSGN",corrHW:-14,corrLW:-14,tidal:true,expert:true,noFlow:false,depth:15,vis:[2,6],lat:51.527,lon:3.441,desc:"Côte nord de Walcheren, Mer du Nord. Site très exposé, courants côtiers forts. Boot-diving. Experts uniquement."},
   hansweert:     {fr:"Hansweert",zone:"Westerschelde",rws:"VLISSGN",corrHW:+45,corrLW:+40,tidal:true,expert:true,noFlow:false,depth:15,vis:[1,4],lat:51.443,lon:4.003,desc:"Westerschelde, canal de Hansweert. Forts courants, trafic maritime dense. Experts uniquement."},
   walsoorden:    {fr:"Walsoorden",zone:"Westerschelde",rws:"VLISSGN",corrHW:+55,corrLW:+50,tidal:true,expert:true,noFlow:false,depth:15,vis:[1,4],lat:51.381,lon:4.032,desc:"Westerschelde. Courants très forts. Accès réglementé. Experts uniquement."},
   zierikzee:     {fr:"Zierikzee",zone:"Oosterschelde",rws:"STAVNS",corrHW:-20,corrLW:-22,tidal:true,expert:false,noFlow:false,depth:12,vis:[3,8],lat:51.650,lon:3.923,desc:"Port historique de Schouwen-Duiveland. Site accessible, vie marine variée."},
@@ -619,7 +619,7 @@ function renderTides(extremes,spot,dateStr){
           <span class="dw-pill ${inW?'dw-now':past?'dw-past':'dw-ok'}">${fmtT(e.win.from)} → ${fmtT(e.win.to)}</span>
           <span style="font-size:.68rem;color:var(--muted)">Étale : ${fmtT(e.win.kt)}</span>
         </div>
-        ${e.corr!==0?`<div class="corr-note">Correction NOB ${e.corr>0?'+':''}${e.corr} min vs Stavenisse · Sources : duikspotter.nl, sovscaldis.nl</div>`:''}
+        ${e.corr!==0?`<div class="corr-note">Correction NOB ${e.corr>0?'+':''}${e.corr} min vs ${spot.rws==='VLISSGN'?'Vlissingen':'Stavenisse'} · Sources : duikspotter.nl, sovscaldis.nl</div>`:''}
       </div>`;
     });
     if(spot.expert) html+=`<div class="alert a-red">⚠️ <strong>Experts uniquement</strong> - Courants violents / trafic maritime. Certification avancée requise.</div>`;
